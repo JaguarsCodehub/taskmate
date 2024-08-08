@@ -15,7 +15,7 @@ const Home = () => {
             </View>
             <View style={{ marginTop: 70, padding: 20 }}>
                 <TouchableOpacity onPress={() => router.push('/(auth)/signup')} style={{ backgroundColor: "#212121", borderRadius: 10, paddingHorizontal: 40, paddingVertical: 15 }}>
-                    <Text style={{ textAlign: "center", color: "white", fontSize: 15 }}>Get Started</Text>
+                    <Text style={{ textAlign: "center", color: "white", fontSize: 15 }}>Get Started Now</Text>
                 </TouchableOpacity>
             </View>
         </View>
