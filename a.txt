@@ -1,16 +1,15 @@
-whm server login
-WHM Login URL : https://easy.121server.com/whm (or) https://easy.121server.com:2087/
-WHM User Name : ravivainfotech
-WHM Password : TZhmPJSQ5ZaeMZ
-
-Name Server Information:
-¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯
-Primary Name Server : EASY1.121SERVER.COM
-Secondary Name Server : EASY2.121SERVER.COM
-
-domain = raviva.co.in
-ravivainfo
-Ravi$0305#
-
-easy1.121server.com
-easy2.121server.com
+{/* <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}> */}
+      <Stack>
+        {/* {session && session.user ? (
+          <Stack.Screen name="(main)" options={{ headerShown: false }} />
+        ) : (
+          <>
+            <Stack.Screen name="index" options={{ headerShown: false }} />
+            <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+          </>
+        )} */}
+        <Stack.Screen name="index" options={{ headerShown: false }} />
+        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+        <Stack.Screen name="(main)" options={{ headerShown: false }} />
+      </Stack>
+      {/* </ThemeProvider> */}

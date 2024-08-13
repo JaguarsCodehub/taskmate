@@ -1,15 +1,12 @@
-import { supabase } from '@/utils/supabase';
-import { Session } from '@supabase/supabase-js';
-import { Stack } from 'expo-router';
-import { useEffect, useState } from 'react';
-import { AppState } from 'react-native';
+import { useAuth } from '@/providers/AuthProvider';
+import { Redirect, Stack } from 'expo-router';
 
-export default function RootLayout() {
-    return (
-        <Stack
-            screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="login" options={{ headerShown: false }} />
-            <Stack.Screen name="signup" />
-        </Stack>
-    );
+export default function AuthLayout() {
+    const { isAuthenticated } = useAuth();
+
+    if (isAuthenticated) {
+        return <Redirect href="/(main)" />;
+    }
+
+    return <Stack />;
 }
