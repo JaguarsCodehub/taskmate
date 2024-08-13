@@ -1,4 +1,5 @@
 import { supabase } from '@/utils/supabase';
+import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { Alert, StyleSheet, View, AppState, TextInput, Button } from 'react-native';
 
@@ -17,12 +18,39 @@ export default function Auth() {
 
     async function signInWithEmail() {
         setLoading(true);
-        const { error } = await supabase.auth.signInWithPassword({
+        const { data: userData, error } = await supabase.auth.signInWithPassword({
             email: email,
             password: password,
         });
 
-        if (error) Alert.alert(error.message);
+        if (error) {
+            Alert.alert(error.message);
+            setLoading(false);
+            return;
+        }
+
+        // Fetch the user's role from the users table
+        const { data, error: roleError } = await supabase
+            .from('users')
+            .select('role')
+            .eq('id', userData.session.user.id)
+            .single();
+
+        if (roleError) {
+            Alert.alert('Error fetching user role', roleError.message);
+            setLoading(false);
+            return;
+        }
+
+        // Navigate to the appropriate screen based on role
+        if (data?.role === 'admin') {
+            console.log(data.role)
+            router.push('/(admin)')
+        } else {
+            console.log(data.role)
+            router.push('/(main)')
+        }
+
         setLoading(false);
     }
 
@@ -33,7 +61,7 @@ export default function Auth() {
             error,
         } = await supabase.auth.signUp({
             email: email,
-            password: password,
+            password: password
         });
 
         if (error) Alert.alert(error.message);

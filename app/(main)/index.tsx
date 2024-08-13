@@ -1,6 +1,7 @@
 import { Image, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-import { Stack } from 'expo-router'
+import { router, Stack } from 'expo-router'
+import { TouchableOpacity } from 'react-native'
 
 const imagesData = [
     {
@@ -53,6 +54,11 @@ const Main = () => {
                     <Text style={{ fontSize: 15, fontFamily: "MontserratSemibold" }}>Today's Task</Text>
                     <Text style={{ fontSize: 15, fontFamily: "MontserratSemibold" }}>See all</Text>
                 </View>
+            </View>
+            <View className='p-6'>
+                <TouchableOpacity onPress={() => router.push('/(admin)')}>
+                    <Text style={{ fontSize: 20, fontFamily: "MontserratSemibold", color: "white", backgroundColor: "black", padding: 6 }}>Get Started Now</Text>
+                </TouchableOpacity>
             </View>
         </View>
     )
