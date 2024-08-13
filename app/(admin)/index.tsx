@@ -14,6 +14,12 @@ const AdminDashboard = () => {
                     onPress={() => router.push('/(admin)/create-task')}
                 />
             </View>
+            <View className='mt-4 px-6'>
+                <Button
+                    title='Assign Tasks'
+                    onPress={() => router.push('/(admin)/assign-task')}
+                />
+            </View>
         </ScrollView>
     )
 }
