@@ -180,6 +180,7 @@ const AssignTask = () => {
                         mode="date"
                         display="default"
                         onChange={onStartDateChange}
+                        minimumDate={new Date()}
                     />
                 )}
 
