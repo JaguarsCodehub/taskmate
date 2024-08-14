@@ -1,50 +1,48 @@
-# Welcome to your Expo app 👋
+# Task Management Mobile Application
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+## Master Tables
+1. **User Master**
+2. **Task Master**
+3. **Assign Regular Task Master**
+4. **Assign Special Task Master**
+5. **Project Master (Sites)**
+6. **Client Master (Customer)**
+7. **Status Master**
 
-## Get started
+## Functionalities and Features
 
-1. Install dependencies
+### Authentication
+1. Authentication for Users and Admin with ID and Password.
+2. Password reset functionality.
+3. User Personal Profiles (Image, Name, ID).
 
-   ```bash
-   npm install
-   ```
+### Tasks Management
 
-2. Start the app
+**Users Can:**
+- Create a Task *(for themselves)*, Delete a Task, Read their Tasks.
+- Access a Dashboard to check their personal tasks.
+- Access an Assigned Dashboard to check their assigned tasks.
+- View who assigned the task, when it was assigned, and the associated *project* and *client*.
+- Filter tasks by priority (low, medium, high).
+- Mark tasks as completed, with the completion status stored in the database.
 
-   ```bash
-    npx expo start
-   ```
+**Admin Can:**
+1. Create, Delete, and Update Tasks.
+2. Assign Tasks to specific users (employees).
+3. Assign Tasks based on priority levels (low, medium, high).
+4. Set Start and Due Dates (deadlines) for each task.
+5. Assign tasks based on Projects / Clients.
+6. Set the initial status of tasks to “Pending.”
+7. Reassign tasks to other users.
+8. Generate detailed reports on tasks.
+9. Create Projects and assign users to them.
 
-In the output, you'll find options to open the app in a
+### Report of Users Task Completed Data (Admin Only)
+1. Generate a report of a specific user based on dates.
+2. Track logs of days taken on a project.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## Future Use Case Features
+1. Scheduling and Calendar Integration.
+2. HR Management Feature.
+3. Communication and Collaboration (Chatting).
+4. User Activity Report.
