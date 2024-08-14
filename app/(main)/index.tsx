@@ -57,7 +57,12 @@ const Main = () => {
             </View>
             <View className='p-6'>
                 <TouchableOpacity onPress={() => router.push('/(admin)')}>
-                    <Text style={{ fontSize: 20, fontFamily: "MontserratSemibold", color: "white", backgroundColor: "black", padding: 6 }}>Get Started Now</Text>
+                    <Text style={{ fontSize: 20, fontFamily: "MontserratSemibold", color: "white", backgroundColor: "black", padding: 6 }}>Go to Admin</Text>
+                </TouchableOpacity>
+            </View>
+            <View className='p-6'>
+                <TouchableOpacity onPress={() => router.push('/(main)/assigned-dashboard')}>
+                    <Text style={{ fontSize: 20, fontFamily: "MontserratSemibold", color: "white", backgroundColor: "black", padding: 6 }}>User's Assigned Dashboard</Text>
                 </TouchableOpacity>
             </View>
         </View>

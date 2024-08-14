@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Button, Alert, TextInput, StyleSheet } from 'react-native';
-import { supabase } from '@/utils/supabase'; // Adjust the import as needed
+import { supabase } from '@/utils/supabase';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Picker } from '@react-native-picker/picker';
 
 const TaskDetailScreen = () => {
-    const [newTitle, setNewTitle] = useState<string>("")
-    const [newDescription, setNewDescription] = useState<string>("")
-    const [newPriority, setNewPriority] = useState<string>("")
+    const [newTitle, setNewTitle] = useState<string>("");
+    const [newDescription, setNewDescription] = useState<string>("");
+    const [newPriority, setNewPriority] = useState<string>("");
+    const [newAssignedUserId, setNewAssignedUserId] = useState<string | null>(null);
+    const [users, setUsers] = useState<any[]>([]); // For fetching users
     const router = useRouter();
     const { taskId } = useLocalSearchParams<{ taskId: string }>();
     const [task, setTask] = useState<any>(null);
@@ -19,19 +21,30 @@ const TaskDetailScreen = () => {
                 .select('*')
                 .eq('id', taskId)
                 .single();
-            console.log(taskId)
+
             if (error) {
                 console.error(error);
                 Alert.alert('Error', 'Task not found');
             } else {
                 setTask(data);
+            }
+        };
 
+        const fetchUsers = async () => {
+            const { data, error } = await supabase
+                .from('users')
+                .select('id, full_name');
+            if (error) {
+                console.error(error);
+                Alert.alert('Error', 'Could not fetch users');
+            } else {
+                setUsers(data);
             }
         };
 
         fetchTask();
+        fetchUsers();
     }, [taskId]);
-
 
     const handleUpdateTask = async () => {
         if (!newTitle || !newDescription || !newPriority) {
@@ -42,26 +55,37 @@ const TaskDetailScreen = () => {
         try {
             const { error } = await supabase
                 .from('tasks')
-                .update({
-                    title: newTitle || task.title, // Fallback to current value if input is empty
-                    description: newDescription || task.description,
-                    priority: newPriority || task.priority,
-                })
-                .eq('id', taskId); // Add WHERE clause
+                .update({ title: newTitle, description: newDescription, priority: newPriority })
+                .eq('id', taskId);
 
             if (error) throw error;
 
             Alert.alert("Task was updated successfully");
-            setNewTitle("");
-            setNewDescription("");
-            setNewPriority("")
-            // router.back(); // Optionally navigate back or to another screen
         } catch (error: any) {
             Alert.alert('Error updating task', error.message);
-            console.log(error);
         }
     };
 
+    // TODO: Something is wrong in the reassignment, FIX THIS LATER
+    const handleReassignTask = async () => {
+        if (!newAssignedUserId) {
+            Alert.alert("Error", "Please select a user to reassign the task");
+            return;
+        }
+
+        try {
+            const { error } = await supabase
+                .from('task_assignments')
+                .update({ assigned_to: newAssignedUserId })
+                .eq('task_id', taskId);
+
+            if (error) throw error;
+
+            Alert.alert("Task was reassigned successfully");
+        } catch (error: any) {
+            Alert.alert('Error reassigning task', error.message);
+        }
+    };
 
     if (!task) {
         return (
@@ -74,7 +98,7 @@ const TaskDetailScreen = () => {
     return (
         <View className='p-8'>
             <View>
-                <Text className='text-2xl'>UpdateTask</Text>
+                <Text className='text-2xl'>Update Task</Text>
             </View>
             <View style={{ marginTop: 24 }}>
                 <Text>Change Title</Text>
@@ -101,7 +125,7 @@ const TaskDetailScreen = () => {
                         style={styles.picker}
                         onValueChange={(itemValue) => setNewPriority(itemValue)}
                     >
-                        <Picker.Item label='--Select Service--' value='' />
+                        <Picker.Item label='--Select Priority--' value='' />
                         <Picker.Item label='Low' value='low' />
                         <Picker.Item label='Medium' value='medium' />
                         <Picker.Item label='High' value='high' />
@@ -109,9 +133,28 @@ const TaskDetailScreen = () => {
                 </View>
             </View>
             <View>
+                <Text>Reassign Task</Text>
+                <Picker
+                    selectedValue={newAssignedUserId}
+                    style={styles.picker}
+                    onValueChange={(itemValue) => setNewAssignedUserId(itemValue)}
+                >
+                    <Picker.Item label='--Select User--' value='' />
+                    {users.map((user) => (
+                        <Picker.Item key={user.id} label={user.full_name} value={user.id} />
+                    ))}
+                </Picker>
+            </View>
+            <View>
                 <Button
                     title='Update Task'
                     onPress={handleUpdateTask}
+                />
+            </View>
+            <View style={{ marginTop: 10 }}>
+                <Button
+                    title='Reassign Task'
+                    onPress={handleReassignTask}
                 />
             </View>
         </View>
@@ -127,6 +170,5 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         backgroundColor: 'lightgray',
         borderRadius: 20,
-        fontWeight: '700',
     },
-})
+});
