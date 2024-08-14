@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, FlatList, Alert } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, FlatList, Alert, ScrollView } from 'react-native';
 import { useAuth } from '@/providers/AuthProvider';
 import { supabase } from '@/utils/supabase'; // Adjust the import as needed
 import { format, startOfToday, endOfToday } from 'date-fns';
@@ -87,43 +87,49 @@ const Main = () => {
     );
 
     return (
-        <View style={{ padding: 20, flex: 1 }}>
-            <Text style={styles.header}>Start your Day & Be Productive</Text>
-            <View style={styles.avatarContainer}>
-                {imagesData.map((image) => (
-                    <Image key={image.id} source={image.source} style={styles.avatarImage} />
-                ))}
-                <View style={styles.moreTasksContainer}>
-                    <Text style={styles.moreTasksText}>10+</Text>
+        <ScrollView>
+            <View style={{ padding: 20, display: "flex", flexDirection: "row" }}>
+                <Image source={require("@/assets/images/swift.png")} style={styles.logoImage} />
+                <Text style={{ fontSize: 20, fontWeight: "600", marginLeft: 10, fontFamily: "MontserratMedium" }}>TaskMate</Text>
+            </View>
+            <View style={{ padding: 20, flex: 1 }}>
+                <Text style={styles.header}>Start your Day & Be Productive</Text>
+                <View style={styles.avatarContainer}>
+                    {imagesData.map((image) => (
+                        <Image key={image.id} source={image.source} style={styles.avatarImage} />
+                    ))}
+                    <View style={styles.moreTasksContainer}>
+                        <Text style={styles.moreTasksText}>10+</Text>
+                    </View>
+                </View>
+                <View style={styles.taskInfoContainer}>
+                    <Text style={styles.taskInfoText}>You have a lot of tasks pending</Text>
+                </View>
+                <View style={{ marginTop: 10 }}>
+                    <View style={styles.headerContainer}>
+                        <Text style={styles.headerTitle}>Today's Task</Text>
+                        <Text style={styles.headerSubtitle}>See all</Text>
+                    </View>
+                    <View>
+                        <FlatList
+                            data={todayTasks}
+                            keyExtractor={(item) => item.id.toString()}
+                            renderItem={renderTaskItem}
+                        />
+                    </View>
+                </View>
+                <View style={styles.buttonContainer}>
+                    <TouchableOpacity onPress={() => router.push('/(admin)')}>
+                        <Text style={styles.buttonText}>Go to Admin</Text>
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.buttonContainer}>
+                    <TouchableOpacity onPress={() => router.push('/(main)/assigned-dashboard')}>
+                        <Text style={styles.buttonText}>User's Assigned Dashboard</Text>
+                    </TouchableOpacity>
                 </View>
             </View>
-            <View style={styles.taskInfoContainer}>
-                <Text style={styles.taskInfoText}>You have a lot of tasks pending</Text>
-            </View>
-            <View style={{ marginTop: 10 }}>
-                <View style={styles.headerContainer}>
-                    <Text style={styles.headerTitle}>Today's Task</Text>
-                    <Text style={styles.headerSubtitle}>See all</Text>
-                </View>
-                <View>
-                    <FlatList
-                        data={todayTasks}
-                        keyExtractor={(item) => item.id.toString()}
-                        renderItem={renderTaskItem}
-                    />
-                </View>
-            </View>
-            <View style={styles.buttonContainer}>
-                <TouchableOpacity onPress={() => router.push('/(admin)')}>
-                    <Text style={styles.buttonText}>Go to Admin</Text>
-                </TouchableOpacity>
-            </View>
-            <View style={styles.buttonContainer}>
-                <TouchableOpacity onPress={() => router.push('/(main)/assigned-dashboard')}>
-                    <Text style={styles.buttonText}>User's Assigned Dashboard</Text>
-                </TouchableOpacity>
-            </View>
-        </View>
+        </ScrollView>
     );
 };
 
@@ -132,6 +138,10 @@ const styles = StyleSheet.create({
         fontSize: 30,
         fontFamily: 'MontserratSemibold',
         color: '#1A3636',
+    },
+    logoImage: {
+        width: 25,
+        height: 25,
     },
     avatarContainer: {
         display: 'flex',
