@@ -1,7 +1,9 @@
-import { Image, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import { router, Stack } from 'expo-router'
-import { TouchableOpacity } from 'react-native'
+import React, { useEffect, useState } from 'react';
+import { View, Text, Image, StyleSheet, TouchableOpacity, FlatList, Alert } from 'react-native';
+import { useAuth } from '@/providers/AuthProvider';
+import { supabase } from '@/utils/supabase'; // Adjust the import as needed
+import { format, startOfToday, endOfToday } from 'date-fns';
+import { router } from 'expo-router';
 
 const imagesData = [
     {
@@ -20,66 +22,184 @@ const imagesData = [
         id: 4,
         source: require('../../assets/images/avatar4.jpg'),
     },
-]
+];
 
 const Main = () => {
+    const { user } = useAuth();
+    const [todayTasks, setTodayTasks] = useState<any[]>([]);
+    const userId = user?.id; // Get this from your user context/auth state
+
+    useEffect(() => {
+        const fetchTodayTasks = async () => {
+            const todayStart = startOfToday().toISOString();
+            const todayEnd = endOfToday().toISOString();
+
+            const { data, error } = await supabase
+                .from('task_assignments')
+                .select(`
+                    id,
+                    start_date,
+                    due_date,
+                    tasks (
+                        id,
+                        title,
+                        priority
+                    ),
+                    assigned_by (full_name),
+                    projects!fk_project_id (
+                        name
+                    ),
+                    clients (
+                        name
+                    )
+                `)
+                .eq('assigned_to', userId)
+                .gte('start_date', todayStart)
+                .lte('start_date', todayEnd); // Check if `due_date` should be used as well
+
+            if (error) {
+                console.error('Error fetching today\'s tasks:', error);
+                Alert.alert('Error', 'Could not fetch today\'s tasks.');
+            } else {
+                setTodayTasks(data);
+            }
+        };
+
+
+        fetchTodayTasks();
+    }, [userId]);
+
+    const formatDate = (dateString: string) => {
+        const date = new Date(dateString);
+        return format(date, 'd MMMM yyyy');
+    };
+
+    const renderTaskItem = ({ item }: { item: any }) => (
+        <View style={styles.itemContainer}>
+            <Text>Task: {item.tasks?.title || 'No title'}</Text>
+            <Text>Assigned By: {item.assigned_by?.full_name || 'Unknown'}</Text>
+            <Text>Project: {item.projects?.name || 'No project'}</Text>
+            <Text>Client: {item.clients?.name || 'No client'}</Text>
+            <Text>Priority: {item.tasks?.priority || 'No priority'}</Text>
+            <Text>Start Date: {item.start_date ? formatDate(item.start_date) : 'No start date'}</Text>
+            <Text>Due Date: {item.due_date ? formatDate(item.due_date) : 'No due date'}</Text>
+        </View>
+    );
+
     return (
         <View style={{ padding: 20, flex: 1 }}>
-            <Stack.Screen options={{ headerShown: false }} />
-            <View style={{ display: "flex", flexDirection: "row", marginTop: 20 }}>
-                <Image source={require("@/assets/images/swift.png")} style={styles.logoImage} />
-                <Text style={{ fontSize: 20, fontWeight: "600", marginLeft: 10, fontFamily: "MontserratMedium" }}>TaskMate</Text>
-            </View>
-            <View style={{ marginTop: 20 }}>
-                <Text style={{ fontSize: 30, fontFamily: "MontserratSemibold", color: "#1A3636" }}>Start your Day</Text>
-                <Text style={{ fontSize: 30, fontFamily: "MontserratMedium" }}>& Be Productive</Text>
-            </View>
-            <View style={{ backgroundColor: "#93B1A6", paddingVertical: 20, marginTop: 20, borderRadius: 10 }}>
-                <View style={{ display: "flex", flexDirection: "row", backgroundColor: "wwhite", paddingHorizontal: 10 }}>
-                    {imagesData.map((image) => (
-                        <View key={image.id}>
-                            <Image source={image.source} style={styles.avatarImage} />
-                        </View>
-                    ))}
-                    <View style={{ backgroundColor: "black", alignItems: "center", justifyContent: "center", borderRadius: 25, padding: 8, marginLeft: 5 }}>
-                        <Text style={{ fontSize: 20, fontFamily: "MontserratSemibold", color: "white" }}>10+</Text>
-                    </View>
+            <Text style={styles.header}>Start your Day & Be Productive</Text>
+            <View style={styles.avatarContainer}>
+                {imagesData.map((image) => (
+                    <Image key={image.id} source={image.source} style={styles.avatarImage} />
+                ))}
+                <View style={styles.moreTasksContainer}>
+                    <Text style={styles.moreTasksText}>10+</Text>
                 </View>
-                <View style={{ paddingHorizontal: 20, marginTop: 10 }}>
-                    <Text style={{ fontSize: 15, fontFamily: "MontserratSemibold" }}>You have a lot of tasks pending</Text>
-                </View>
+            </View>
+            <View style={styles.taskInfoContainer}>
+                <Text style={styles.taskInfoText}>You have a lot of tasks pending</Text>
             </View>
             <View style={{ marginTop: 10 }}>
-                <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
-                    <Text style={{ fontSize: 15, fontFamily: "MontserratSemibold" }}>Today's Task</Text>
-                    <Text style={{ fontSize: 15, fontFamily: "MontserratSemibold" }}>See all</Text>
+                <View style={styles.headerContainer}>
+                    <Text style={styles.headerTitle}>Today's Task</Text>
+                    <Text style={styles.headerSubtitle}>See all</Text>
+                </View>
+                <View>
+                    <FlatList
+                        data={todayTasks}
+                        keyExtractor={(item) => item.id.toString()}
+                        renderItem={renderTaskItem}
+                    />
                 </View>
             </View>
-            <View className='p-6'>
+            <View style={styles.buttonContainer}>
                 <TouchableOpacity onPress={() => router.push('/(admin)')}>
-                    <Text style={{ fontSize: 20, fontFamily: "MontserratSemibold", color: "white", backgroundColor: "black", padding: 6 }}>Go to Admin</Text>
+                    <Text style={styles.buttonText}>Go to Admin</Text>
                 </TouchableOpacity>
             </View>
-            <View className='p-6'>
+            <View style={styles.buttonContainer}>
                 <TouchableOpacity onPress={() => router.push('/(main)/assigned-dashboard')}>
-                    <Text style={{ fontSize: 20, fontFamily: "MontserratSemibold", color: "white", backgroundColor: "black", padding: 6 }}>User's Assigned Dashboard</Text>
+                    <Text style={styles.buttonText}>User's Assigned Dashboard</Text>
                 </TouchableOpacity>
             </View>
         </View>
-    )
-}
-
-export default Main
+    );
+};
 
 const styles = StyleSheet.create({
-    logoImage: {
-        width: 25,
-        height: 25,
+    header: {
+        fontSize: 30,
+        fontFamily: 'MontserratSemibold',
+        color: '#1A3636',
+    },
+    avatarContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        marginTop: 20,
+        backgroundColor: '#93B1A6',
+        paddingVertical: 20,
+        borderRadius: 10,
     },
     avatarImage: {
         width: 50,
         height: 50,
         borderRadius: 25,
-        marginLeft: 5
-    }
-})
+        marginLeft: 5,
+    },
+    moreTasksContainer: {
+        backgroundColor: 'black',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 25,
+        padding: 8,
+        marginLeft: 5,
+    },
+    moreTasksText: {
+        fontSize: 20,
+        fontFamily: 'MontserratSemibold',
+        color: 'white',
+    },
+    taskInfoContainer: {
+        paddingHorizontal: 20,
+        marginTop: 10,
+    },
+    taskInfoText: {
+        fontSize: 15,
+        fontFamily: 'MontserratSemibold',
+    },
+    headerContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+    headerTitle: {
+        fontSize: 15,
+        fontFamily: 'MontserratSemibold',
+    },
+    headerSubtitle: {
+        fontSize: 15,
+        fontFamily: 'MontserratSemibold',
+    },
+    itemContainer: {
+        backgroundColor: "#93B1A6",
+        padding: 16,
+        borderBottomWidth: 1,
+        borderBottomColor: '#ccc',
+        marginBottom: 10,
+        borderRadius: 10,
+        marginTop: 10
+    },
+    buttonContainer: {
+        padding: 6,
+    },
+    buttonText: {
+        fontSize: 20,
+        fontFamily: 'MontserratSemibold',
+        color: 'white',
+        backgroundColor: 'black',
+        padding: 6,
+    },
+});
+
+export default Main;

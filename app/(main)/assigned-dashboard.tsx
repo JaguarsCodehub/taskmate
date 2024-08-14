@@ -76,20 +76,20 @@ const AssignedDashboardScreen = () => {
     const renderTaskItem = ({ item }: { item: any }) => {
         // console.log(item); // Log item
         return (
-            <View style={styles.itemContainer} className='bg-rose-300'>
-                <Text style={{ fontSize: 15, fontFamily: "MontserratMedium" }}>Task: {item.tasks?.title || 'No title'}</Text>
-                <Text style={{ fontSize: 15, fontFamily: "MontserratMedium" }}>Assigned By: {item.assigned_by?.full_name || 'Unknown'}</Text>
-                <Text style={{ fontSize: 15, fontFamily: "MontserratMedium" }}>Project: {item.projects?.name || 'No project'}</Text>
-                <Text style={{ fontSize: 15, fontFamily: "MontserratMedium" }}>Client: {item.clients?.name || 'No client'}</Text>
-                <Text style={{ fontSize: 15, fontFamily: "MontserratMedium" }}>Priority: {item.tasks?.priority || 'No priority'}</Text>
-                <Text style={{ fontSize: 15, fontFamily: "MontserratMedium" }}>Start Date: {item.start_date ? formatDate(item.start_date) : 'No start date'}</Text>
-                <Text style={{ fontSize: 15, fontFamily: "MontserratMedium" }}>Due Date: {item.due_date ? formatDate(item.due_date) : 'No due date'}</Text>
-                <Text style={{ fontSize: 15, fontFamily: "MontserratMedium" }}>Status: {item.tasks?.status || 'Pending'}</Text>
+            <View style={styles.itemContainer}>
+                <Text style={{ fontSize: 15, fontFamily: "MontserratMedium", color: "#93B1A6" }}>Task: {item.tasks?.title || 'No title'}</Text>
+                <Text style={{ fontSize: 15, fontFamily: "MontserratMedium", color: "#93B1A6" }}>Assigned By: {item.assigned_by?.full_name || 'Unknown'}</Text>
+                <Text style={{ fontSize: 15, fontFamily: "MontserratMedium", color: "#93B1A6" }}>Project: {item.projects?.name || 'No project'}</Text>
+                <Text style={{ fontSize: 15, fontFamily: "MontserratMedium", color: "#93B1A6" }}>Client: {item.clients?.name || 'No client'}</Text>
+                <Text style={{ fontSize: 15, fontFamily: "MontserratMedium", color: "#93B1A6" }}>Priority: {item.tasks?.priority || 'No priority'}</Text>
+                <Text style={{ fontSize: 15, fontFamily: "MontserratMedium", color: "#93B1A6" }}>Start Date: {item.start_date ? formatDate(item.start_date) : 'No start date'}</Text>
+                <Text style={{ fontSize: 15, fontFamily: "MontserratMedium", color: "#93B1A6" }}>Due Date: {item.due_date ? formatDate(item.due_date) : 'No due date'}</Text>
+                <Text style={{ fontSize: 15, fontFamily: "MontserratMedium", color: "#93B1A6" }}>Status: {item.tasks?.status || 'Pending'}</Text>
                 <TouchableOpacity
                     onPress={() => handleMarkAsComplete(item.tasks?.id || '')}
                     style={styles.completeButton}
                 >
-                    <Text>Mark as Complete</Text>
+                    <Text className='text-white'>Mark as Complete</Text>
                 </TouchableOpacity>
             </View>
         );
@@ -122,13 +122,17 @@ const styles = StyleSheet.create({
         marginBottom: 16,
     },
     itemContainer: {
+        backgroundColor: "#183D3D",
         padding: 16,
         borderBottomWidth: 1,
         borderBottomColor: '#ccc',
         marginBottom: 10,
+        borderRadius: 10
     },
     completeButton: {
-        color: 'blue',
+        backgroundColor: "#5C8374",
+        padding: 5,
+        borderRadius: 10,
         marginTop: 10,
         textDecorationLine: 'underline',
     },
