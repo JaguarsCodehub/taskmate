@@ -20,6 +20,24 @@ const AdminDashboard = () => {
                     onPress={() => router.push('/(admin)/assign-task')}
                 />
             </View>
+            <View className='mt-4 px-6'>
+                <Button
+                    title='Update Task'
+                    onPress={() => router.push('/(admin)\\update-task')}
+                />
+            </View>
+            <View className='mt-4 px-6'>
+                <Button
+                    title='Delete Tasks'
+                    onPress={() => router.push('/(admin)/delete-task')}
+                />
+            </View>
+            <View className='mt-4 px-6'>
+                <Button
+                    title='Projects'
+                    onPress={() => router.push('/(admin)/projects')}
+                />
+            </View>
         </ScrollView>
     )
 }
