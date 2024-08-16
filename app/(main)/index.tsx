@@ -73,14 +73,22 @@ const Main = () => {
     };
 
     const renderTaskItem = ({ item }: { item: any }) => (
-        <View style={styles.itemContainer}>
-            <Text>Task: {item.tasks?.title || 'No title'}</Text>
-            <Text>Assigned By: {item.assigned_by?.full_name || 'Unknown'}</Text>
-            <Text>Project: {item.projects?.name || 'No project'}</Text>
-            <Text>Client: {item.clients?.name || 'No client'}</Text>
-            <Text>Priority: {item.tasks?.priority || 'No priority'}</Text>
-            <Text>Start Date: {item.start_date ? formatDate(item.start_date) : 'No start date'}</Text>
-            <Text>Due Date: {item.due_date ? formatDate(item.due_date) : 'No due date'}</Text>
+        <View style={{
+            backgroundColor: item.tasks.priority === "low" ? "#5AB2FF" : "#FF8A8A",
+            padding: 20,
+            borderBottomWidth: 1,
+            borderBottomColor: '#ccc',
+            marginBottom: 10,
+            borderRadius: 10,
+            marginTop: 10
+        }}>
+            <Text style={{ fontSize: 20, fontFamily: "MontserratSemibold" }}>{item.tasks?.title || 'No title'}</Text>
+            <Text style={{ fontSize: 16, fontFamily: "MontserratMedium" }}>Assigned By: {item.assigned_by?.full_name || 'Unknown'}</Text>
+            {/* <Text>Project: {item.projects?.name || 'No project'}</Text> */}
+            {/* <Text>Client: {item.clients?.name || 'No client'}</Text> */}
+            {/* <Text>Start: {item.start_date ? formatDate(item.start_date) : 'No start date'}</Text> */}
+            <Text style={{ fontSize: 16, fontFamily: "MontserratMedium" }}>Deadline: {item.due_date ? formatDate(item.due_date) : 'No due date'}</Text>
+            <Text style={{ fontSize: 16, fontFamily: "MontserratMedium" }}>Priority: {item.tasks?.priority || 'No priority'}</Text>
         </View>
     );
 

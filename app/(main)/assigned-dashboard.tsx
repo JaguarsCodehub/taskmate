@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
     },
     header: {
         fontSize: 24,
-        fontWeight: 'bold',
+        fontFamily: "MontserratBold",
         marginBottom: 16,
     },
     priorityFilterContainer: {

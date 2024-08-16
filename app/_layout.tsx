@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import 'react-native-reanimated';
 import '../global.css'
 
-import AuthProvider from '@/providers/AuthProvider';
+import AuthProvider, { useAuth } from '@/providers/AuthProvider';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -19,6 +19,9 @@ export default function RootLayout() {
     MontserratRegular: require('../assets/fonts/Montserrat-Regular.ttf'),
     MontserratSemibold: require('../assets/fonts/Montserrat-SemiBold.ttf')
   });
+
+  const { user } = useAuth();
+  console.log(user?.email)
 
   useEffect(() => {
     if (loaded) {
