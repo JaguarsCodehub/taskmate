@@ -4,30 +4,28 @@ import { useAuth } from '@/providers/AuthProvider';
 import { supabase } from '@/utils/supabase'; // Adjust the import as needed
 import { format, startOfToday, endOfToday } from 'date-fns';
 import { router } from 'expo-router';
-
-const imagesData = [
-    {
-        id: 1,
-        source: require('../../assets/images/avatar1.jpg'),
-    },
-    {
-        id: 2,
-        source: require('../../assets/images/avatar2.jpg'),
-    },
-    {
-        id: 3,
-        source: require('../../assets/images/avatar3.jpg'),
-    },
-    {
-        id: 4,
-        source: require('../../assets/images/avatar4.jpg'),
-    },
-];
+import { imagesData } from '@/constants/images';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import CustomDrawer from '@/components/ui/CustomDrawer';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
+import Feather from '@expo/vector-icons/Feather';
 
 const Main = () => {
     const { user } = useAuth();
     const [todayTasks, setTodayTasks] = useState<any[]>([]);
     const userId = user?.id; // Get this from your user context/auth state
+
+
+
+    const [isDrawerOpen, setDrawerOpen] = useState(false);
+
+    const openDrawer = () => {
+        setDrawerOpen(!isDrawerOpen);
+    };
+
+    const closeDrawer = () => {
+        setDrawerOpen(false)
+    }
 
     useEffect(() => {
         const fetchTodayTasks = async () => {
@@ -67,7 +65,7 @@ const Main = () => {
 
 
         fetchTodayTasks();
-    }, [userId]);
+    }, [userId, todayTasks]);
 
     const formatDate = (dateString: string) => {
         const date = new Date(dateString);
@@ -86,29 +84,91 @@ const Main = () => {
         </View>
     );
 
+    const renderPriority = ({ item }: { item: any }) => (
+        <>
+            <View key={item.id} style={{ backgroundColor: "#677D6A", padding: 5, borderRadius: 10, marginTop: 10, marginLeft: 5 }}>
+                <Text style={{ color: "white", fontFamily: "MontserratSemibold" }}>{item.tasks.priority}</Text>
+            </View>
+        </>
+    );
+
+
+
     return (
         <ScrollView>
-            <View style={{ padding: 20, display: "flex", flexDirection: "row" }}>
-                <Image source={require("@/assets/images/swift.png")} style={styles.logoImage} />
-                <Text style={{ fontSize: 20, fontWeight: "600", marginLeft: 10, fontFamily: "MontserratMedium" }}>TaskMate</Text>
+            <CustomDrawer isOpen={isDrawerOpen} closeDrawer={closeDrawer} />
+            <View style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+                <View style={{ padding: 20, display: "flex", flexDirection: "row" }}>
+                    <Image source={require("@/assets/images/swift.png")} style={styles.logoImage} />
+                    <Text style={{ fontSize: 20, fontWeight: "600", marginLeft: 10, fontFamily: "MontserratMedium" }}>TaskMate</Text>
+                </View>
+                <TouchableOpacity onPress={openDrawer}>
+                    <Image source={require("@/assets/images/menu.png")} style={styles.drawerImage} />
+                </TouchableOpacity>
             </View>
-            <View style={{ padding: 20, flex: 1 }}>
-                <Text style={styles.header}>Start your Day & Be Productive</Text>
-                <View style={styles.avatarContainer}>
+            <View style={{ padding: 20 }}>
+                <Text style={styles.header}>Start your Day & Be Productive ✌</Text>
+                {/* <View style={styles.avatarContainer}>
                     {imagesData.map((image) => (
                         <Image key={image.id} source={image.source} style={styles.avatarImage} />
                     ))}
                     <View style={styles.moreTasksContainer}>
                         <Text style={styles.moreTasksText}>10+</Text>
                     </View>
+                </View> */}
+
+                <View style={{ backgroundColor: "#40534C", padding: 10, borderRadius: 10, marginTop: 10 }}>
+                    <View style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+                        <Ionicons name="calendar" size={24} color="#fff" />
+                        <Text style={{ fontSize: 15, fontFamily: "MontserratSemibold", marginLeft: 10, color: "#fff" }}>{formatDate(Date())}</Text>
+                    </View>
+                    <View style={{ marginTop: 20 }}>
+                        <Text style={{ fontSize: 15, fontFamily: "MontserratMedium", color: "#93B1A6" }}>Current tasks</Text>
+                        <Text style={{ fontSize: 20, fontFamily: "MontserratSemibold", color: "#fff" }}>You have {todayTasks.length} task{todayTasks.length > 1 ? "s" : ""} for today</Text>
+                        <View style={{ marginTop: 10, borderColor: "#93B1A6", borderWidth: 0.2 }} />
+                        <View style={{ marginTop: 5, display: "flex", flexDirection: "row" }}>
+                            <FlatList
+                                data={todayTasks}
+                                keyExtractor={(item) => item.id.toString()}
+                                renderItem={renderPriority}
+                                horizontal
+                            />
+                        </View>
+                    </View>
                 </View>
                 <View style={styles.taskInfoContainer}>
-                    <Text style={styles.taskInfoText}>You have a lot of tasks pending</Text>
+                    {todayTasks.length > 2 ? (
+                        <>
+                            <View style={{ backgroundColor: "#ffdac3", borderRadius: 5, display: "flex", flexDirection: "row", justifyContent: "space-between", padding: 10 }}>
+                                <Text style={styles.taskInfoText}>You have a lot of tasks pending.</Text>
+                                <FontAwesome name="exclamation-triangle" size={24} color="#FF8343" />
+                            </View>
+                        </>
+                    ) : (
+                        <>
+                            <View style={{ backgroundColor: "#677D6A", borderRadius: 5, display: "flex", flexDirection: "row", justifyContent: "space-between", padding: 5, alignItems: "center" }}>
+                                <Text style={{
+                                    fontSize: 12,
+                                    fontFamily: 'MontserratSemibold',
+                                    color: "#fff"
+                                }}>Complete the below remaining tasks.</Text>
+                                {/* <Feather name="chevron-down" size={20} color="white " />  */}
+                            </View>
+                            {/* <Text style={{
+                                fontSize: 15,
+                                fontFamily: 'MontserratSemibold',
+                                color: "black"
+                            }}></Text> */}
+
+                        </>
+                    )}
                 </View>
                 <View style={{ marginTop: 10 }}>
                     <View style={styles.headerContainer}>
                         <Text style={styles.headerTitle}>Today's Task</Text>
-                        <Text style={styles.headerSubtitle}>See all</Text>
+                        <TouchableOpacity onPress={() => router.push("/(main)/assigned-dashboard")}>
+                            <Text style={styles.headerSubtitle}>See all</Text>
+                        </TouchableOpacity>
                     </View>
                     <View>
                         <FlatList
@@ -135,7 +195,7 @@ const Main = () => {
 
 const styles = StyleSheet.create({
     header: {
-        fontSize: 30,
+        fontSize: 25,
         fontFamily: 'MontserratSemibold',
         color: '#1A3636',
     },
@@ -143,11 +203,16 @@ const styles = StyleSheet.create({
         width: 25,
         height: 25,
     },
+    drawerImage: {
+        width: 25,
+        height: 25,
+        marginRight: 30
+    },
     avatarContainer: {
         display: 'flex',
         flexDirection: 'row',
         marginTop: 20,
-        backgroundColor: '#93B1A6',
+        backgroundColor: 'lightgray',
         paddingVertical: 20,
         borderRadius: 10,
     },
@@ -155,7 +220,7 @@ const styles = StyleSheet.create({
         width: 50,
         height: 50,
         borderRadius: 25,
-        marginLeft: 5,
+        marginLeft: 10,
     },
     moreTasksContainer: {
         backgroundColor: 'black',
@@ -171,12 +236,13 @@ const styles = StyleSheet.create({
         color: 'white',
     },
     taskInfoContainer: {
-        paddingHorizontal: 20,
+        // paddingHorizontal: 20,
         marginTop: 10,
     },
     taskInfoText: {
         fontSize: 15,
         fontFamily: 'MontserratSemibold',
+        color: "#FF8343",
     },
     headerContainer: {
         display: 'flex',
