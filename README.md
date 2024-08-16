@@ -5,7 +5,10 @@
 - Logs of a tasks done
 - User Profile (Read, Update, Delete)
 - Change Password (maybe)
-- User Interface Turnaround
+- User Interface Turnaround :
+    - Made some changes to Users Dashboard ✅
+    - Added Logout Functionality ✅
+    - Also added Rerouting to (auth) if user has signed out ✅
 
 ## Tasks Completed:
 
