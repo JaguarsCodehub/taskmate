@@ -1,6 +1,7 @@
 # Task Management Mobile Application
 
 ## TODOS:
+- Admin UI 
 - Report of a specific user based on dates
 - Logs of a tasks done
 - User Profile (Read, Update, Delete)
