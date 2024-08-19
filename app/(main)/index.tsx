@@ -15,8 +15,6 @@ const Main = () => {
     const [todayTasks, setTodayTasks] = useState<any[]>([]);
     const userId = user?.id; // Get this from your user context/auth state
 
-
-
     const [isDrawerOpen, setDrawerOpen] = useState(false);
 
     const openDrawer = () => {
@@ -26,6 +24,9 @@ const Main = () => {
     const closeDrawer = () => {
         setDrawerOpen(false)
     }
+
+
+
 
     useEffect(() => {
         const fetchTodayTasks = async () => {

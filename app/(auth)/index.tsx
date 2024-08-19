@@ -1,7 +1,7 @@
 import { supabase } from '@/utils/supabase';
-import { router } from 'expo-router';
+import { router, Stack } from 'expo-router';
 import React, { useState } from 'react';
-import { Alert, StyleSheet, View, AppState, TextInput, Button } from 'react-native';
+import { Alert, StyleSheet, View, AppState, TextInput, Button, Text, Image, TouchableOpacity } from 'react-native';
 
 AppState.addEventListener('change', (state) => {
     if (state === 'active') {
@@ -72,13 +72,21 @@ export default function Auth() {
 
     return (
         <View style={styles.container}>
+            <Stack.Screen options={{ headerShown: false }} />
+            <View style={{ display: "flex", flexDirection: "row", marginTop: 20 }}>
+                <Image source={require("@/assets/images/swift.png")} style={styles.logoImage} />
+                <Text style={{ fontSize: 20, fontWeight: "600", marginLeft: 10, fontFamily: "MontserratMedium", color: "black" }}>TaskMate</Text>
+            </View>
+            <Text style={{ fontSize: 30, fontFamily: "MontserratSemibold", color: "white", marginTop: 20 }}>Let's get to know you better</Text>
             <View style={[styles.verticallySpaced, styles.mt20]}>
                 <TextInput
                     onChangeText={(text) => setEmail(text)}
                     value={email}
-                    placeholder="email@address.com"
+                    placeholder="Enter your Email Address"
+                    placeholderClassName='text-white'
+                    placeholderTextColor={'white'}
                     autoCapitalize={'none'}
-                    className="border border-gray-300 p-3 rounded-md"
+                    className="border-2 border-[#40534C] p-3 rounded-md"
                 />
             </View>
             <View style={styles.verticallySpaced}>
@@ -86,24 +94,25 @@ export default function Auth() {
                     onChangeText={(text) => setPassword(text)}
                     value={password}
                     secureTextEntry={true}
-                    placeholder="Password"
+                    placeholder="Enter your Password"
+                    placeholderClassName='text-white'
+                    placeholderTextColor={'white'}
                     autoCapitalize={'none'}
-                    className="border border-gray-300 p-3 rounded-md"
+                    className="border-2 border-[#40534C] p-3 rounded-md"
                 />
             </View>
-            <View style={[styles.verticallySpaced, styles.mt20]}>
-                <Button
-                    title="Sign in"
-                    disabled={loading}
-                    onPress={() => signInWithEmail()}
-                />
-            </View>
-            <View style={styles.verticallySpaced}>
-                <Button
-                    title="Sign up"
-                    disabled={loading}
-                    onPress={() => signUpWithEmail()}
-                />
+            <View style={{ display: "flex", marginBottom: 80 }}>
+                <View style={[styles.verticallySpaced, styles.mt20]}>
+                    <TouchableOpacity style={{ backgroundColor: "#D6BD98", padding: 5, paddingVertical: 10, borderRadius: 10 }} disabled={loading} onPress={() => signInWithEmail()}>
+                        <Text style={{ textAlign: "center", fontSize: 20, fontFamily: "MontserratSemibold" }}>Sign in</Text>
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.verticallySpaced}>
+
+                    <TouchableOpacity style={{ backgroundColor: "#242424", padding: 5, paddingVertical: 10, borderRadius: 10 }} disabled={loading} onPress={() => signUpWithEmail()}>
+                        <Text style={{ textAlign: "center", fontSize: 20, fontFamily: "MontserratSemibold", color: "white" }}>Sign up</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         </View>
     );
@@ -111,8 +120,14 @@ export default function Auth() {
 
 const styles = StyleSheet.create({
     container: {
-        marginTop: 40,
+        flex: 1,
         padding: 12,
+        paddingTop: 30,
+        backgroundColor: "#677D6A"
+    },
+    logoImage: {
+        width: 25,
+        height: 25
     },
     verticallySpaced: {
         paddingTop: 4,
