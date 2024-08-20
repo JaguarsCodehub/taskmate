@@ -72,7 +72,7 @@ export default function Auth() {
 
     return (
         <View style={styles.container}>
-            <Stack.Screen options={{ headerShown: false }} />
+            <Stack.Screen options={{ headerShown: false, statusBarColor: "#677D6A" }} />
             <View style={{ display: "flex", flexDirection: "row", marginTop: 20 }}>
                 <Image source={require("@/assets/images/swift.png")} style={styles.logoImage} />
                 <Text style={{ fontSize: 20, fontWeight: "600", marginLeft: 10, fontFamily: "MontserratMedium", color: "black" }}>TaskMate</Text>
@@ -86,7 +86,7 @@ export default function Auth() {
                     placeholderClassName='text-white'
                     placeholderTextColor={'white'}
                     autoCapitalize={'none'}
-                    className="border-2 border-[#40534C] p-3 rounded-md"
+                    className="border-2 border-[white] p-3 rounded-md"
                 />
             </View>
             <View style={styles.verticallySpaced}>
@@ -98,7 +98,7 @@ export default function Auth() {
                     placeholderClassName='text-white'
                     placeholderTextColor={'white'}
                     autoCapitalize={'none'}
-                    className="border-2 border-[#40534C] p-3 rounded-md"
+                    className="border-2 border-[white] p-3 rounded-md"
                 />
             </View>
             <View style={{ display: "flex", marginBottom: 80 }}>
