@@ -39,12 +39,12 @@ const PMMeetingComponent = () => {
 const styles = StyleSheet.create({
     container: {
         padding: 20,
-        backgroundColor: '#ffefcf',
+        backgroundColor: '#93B1A6',
         // alignItems: 'center',
         borderRadius: 5,
     },
     timeContainer: {
-        backgroundColor: '#B99470',
+        backgroundColor: '#40534C',
         paddingVertical: 5,
         paddingHorizontal: 20,
         borderRadius: 10,
@@ -59,10 +59,10 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontFamily: "MontserratSemibold",
         marginBottom: 5,
-        color: "#65503b"
+        color: "#40534C"
     },
     description: {
-        color: '#65503b',
+        color: '#40534C',
         fontSize: 16,
         fontFamily: "MontserratRegular",
         marginBottom: 15,

@@ -126,13 +126,13 @@ const AssignTask = () => {
     return (
         <ScrollView>
             <LinearGradient
-                colors={['#e2d1c3', '#e2d1c3']}
+                colors={['#40534C', '#e2d1c3']}
                 style={styles.background}
             />
             <View className='p-8'>
 
-                <Text style={{ fontSize: 25, fontFamily: "MontserratSemibold" }}>Assign Tasks to users</Text>
-                <Text style={{ fontSize: 15, fontFamily: "MontserratRegular" }}>You can assign specific tasks to users</Text>
+                <Text style={{ fontSize: 25, fontFamily: "MontserratSemibold", color: "white" }}>Assign Tasks to users</Text>
+                <Text style={{ fontSize: 15, fontFamily: "MontserratRegular", color: "white" }}>You can assign specific tasks to users</Text>
             </View>
             <View style={{ paddingHorizontal: 20 }}>
                 <PMMeetingComponent />
@@ -192,7 +192,7 @@ const AssignTask = () => {
                         <Button
                             title={startDate ? startDate.toDateString() : 'Select Start Date'}
                             onPress={() => setShowStartDatePicker(true)}
-                            color={'#65503b'}
+                            color={'#40534C'}
                         />
 
                         {showStartDatePicker && (
@@ -211,7 +211,7 @@ const AssignTask = () => {
                         <Button
                             title={deadlineDate ? deadlineDate.toDateString() : 'Select Deadline Date'}
                             onPress={() => setShowDeadlineDatePicker(true)}
-                            color={'#65503b'}
+                            color={'#40534C'}
                         />
 
                         {showDeadlineDatePicker && (
@@ -226,8 +226,8 @@ const AssignTask = () => {
                 </View>
 
                 <View style={{ marginTop: 20, paddingBottom: 60 }}>
-                    <TouchableOpacity onPress={handleAssignTask} style={{ backgroundColor: "#B99470", padding: 10, borderRadius: 5, paddingVertical: 10 }}>
-                        <Text style={{ fontSize: 20, fontFamily: "MontserratSemibold", textAlign: "center", color: "white" }}>Assign Task</Text>
+                    <TouchableOpacity onPress={handleAssignTask} style={{ backgroundColor: "#40534C", padding: 10, borderRadius: 5, paddingVertical: 10 }}>
+                        <Text style={{ fontSize: 20, fontFamily: "MontserratSemibold", textAlign: "center", color: "#eee" }}>Assign Task</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -242,7 +242,7 @@ const styles = StyleSheet.create({
         fontSize: 15,
         fontFamily: "MontserratSemibold",
         marginTop: 10,
-        color: "#65503b"
+        color: "#FFF"
     },
     picker: {
         backgroundColor: "white",

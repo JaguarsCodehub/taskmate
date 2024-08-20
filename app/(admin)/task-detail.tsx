@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Button, Alert, TextInput, StyleSheet } from 'react-native';
+import { View, Text, Button, Alert, TextInput, StyleSheet, ScrollView, Dimensions } from 'react-native';
 import { supabase } from '@/utils/supabase';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Picker } from '@react-native-picker/picker';
+import { LinearGradient } from 'expo-linear-gradient';
+
+
+const { width, height } = Dimensions.get('window')
 
 const TaskDetailScreen = () => {
     const [newTitle, setNewTitle] = useState<string>("");
@@ -96,68 +100,80 @@ const TaskDetailScreen = () => {
     }
 
     return (
-        <View className='p-8'>
-            <View>
-                <Text className='text-2xl'>Update Task</Text>
-            </View>
-            <View style={{ marginTop: 24 }}>
-                <Text>Change Title</Text>
-                <TextInput
-                    placeholder={task.title}
-                    value={newTitle}
-                    onChangeText={setNewTitle}
-                />
-            </View>
-            <View>
-                <Text>Change Description</Text>
-                <TextInput
-                    placeholder={task.description}
-                    value={newDescription}
-                    onChangeText={setNewDescription}
-                />
-            </View>
-            <View>
-                <Text>Change Priority</Text>
-                <View style={{ marginTop: 10 }}>
-                    <Text>Current Priority: {task.priority}</Text>
+        <ScrollView>
+            <LinearGradient
+                colors={['#e2d1c3', '#e2d1c3']}
+                style={styles.background}
+            />
+            <View className='p-8 h-screen'>
+                <View>
+                    <Text style={{ fontSize: 20, fontFamily: "MontserratSemibold" }}>Update specific Task</Text>
+                </View>
+                <View style={{ marginTop: 24 }}>
+                    <Text style={styles.text}>Change Title</Text>
+                    <TextInput
+                        placeholder={task.title}
+                        placeholderTextColor={'#212121'}
+                        value={newTitle}
+                        onChangeText={setNewTitle}
+                        style={styles.textInput}
+                    />
+                </View>
+                <View>
+                    <Text style={styles.text}>Change Description</Text>
+                    <TextInput
+                        placeholder={task.description}
+                        placeholderTextColor={'#212121'}
+                        value={newDescription}
+                        onChangeText={setNewDescription}
+                        style={styles.textInput}
+                    />
+                </View>
+                <View>
+                    <Text style={styles.text}>Change Priority</Text>
+                    <View style={{ marginTop: 10 }}>
+                        <Text style={styles.text}>Current Priority: {task.priority}</Text>
+                        <Picker
+                            selectedValue={newPriority}
+                            style={styles.picker}
+                            onValueChange={(itemValue) => setNewPriority(itemValue)}
+                        >
+                            <Picker.Item label='--Select Priority--' value='' />
+                            <Picker.Item label='Low' value='low' />
+                            <Picker.Item label='Medium' value='medium' />
+                            <Picker.Item label='High' value='high' />
+                        </Picker>
+                    </View>
+                </View>
+                <View>
+                    <Text style={styles.text}>Reassign Task</Text>
                     <Picker
-                        selectedValue={newPriority}
+                        selectedValue={newAssignedUserId}
                         style={styles.picker}
-                        onValueChange={(itemValue) => setNewPriority(itemValue)}
+                        onValueChange={(itemValue) => setNewAssignedUserId(itemValue)}
                     >
-                        <Picker.Item label='--Select Priority--' value='' />
-                        <Picker.Item label='Low' value='low' />
-                        <Picker.Item label='Medium' value='medium' />
-                        <Picker.Item label='High' value='high' />
+                        <Picker.Item label='--Select User--' value='' />
+                        {users.map((user) => (
+                            <Picker.Item key={user.id} label={user.full_name} value={user.id} />
+                        ))}
                     </Picker>
                 </View>
+                <View>
+                    <Button
+                        title='Update Task'
+                        onPress={handleUpdateTask}
+                        color={'#503C3C'}
+                    />
+                </View>
+                <View style={{ marginTop: 10 }}>
+                    <Button
+                        title='Reassign Task'
+                        onPress={handleReassignTask}
+                        color={'#503C3C'}
+                    />
+                </View>
             </View>
-            <View>
-                <Text>Reassign Task</Text>
-                <Picker
-                    selectedValue={newAssignedUserId}
-                    style={styles.picker}
-                    onValueChange={(itemValue) => setNewAssignedUserId(itemValue)}
-                >
-                    <Picker.Item label='--Select User--' value='' />
-                    {users.map((user) => (
-                        <Picker.Item key={user.id} label={user.full_name} value={user.id} />
-                    ))}
-                </Picker>
-            </View>
-            <View>
-                <Button
-                    title='Update Task'
-                    onPress={handleUpdateTask}
-                />
-            </View>
-            <View style={{ marginTop: 10 }}>
-                <Button
-                    title='Reassign Task'
-                    onPress={handleReassignTask}
-                />
-            </View>
-        </View>
+        </ScrollView>
     );
 };
 
@@ -168,7 +184,28 @@ const styles = StyleSheet.create({
         height: 50,
         width: '100%',
         marginBottom: 20,
-        backgroundColor: 'lightgray',
+        backgroundColor: '#c4ac97',
         borderRadius: 20,
+        marginTop: 10
     },
+    background: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        top: 0,
+        height: height
+    },
+    text: {
+        fontSize: 15,
+        fontFamily: "MontserratMedium",
+        marginTop: 10,
+        color: "black"
+    },
+    textInput: {
+        padding: 10,
+        borderColor: "#c4ac97",
+        borderWidth: 1,
+        borderRadius: 5,
+        marginTop: 10
+    }
 });

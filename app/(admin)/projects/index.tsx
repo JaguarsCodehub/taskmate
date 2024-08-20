@@ -35,21 +35,17 @@ const ProjectsScreen = () => {
         router.push({ pathname: `(admin)/projects/update-project`, params: { projectId }, },);
     };
 
-
     return (
         <ScrollView style={{ padding: 10 }}>
-            <View>
-                <Text>ProjectsScreen</Text>
-            </View>
             <View style={{ marginTop: 10 }}>
-                <Text style={{ fontSize: 20, fontFamily: "MontserratSemibold" }}>Existing Projects</Text>
+                <Text style={{ fontSize: 25, fontFamily: "MontserratSemibold" }}>Existing Projects</Text>
             </View>
-            <View >
+            <View>
                 {projects.map((project) => (
                     // <TouchableOpacity key={project.id} onPress={() => handleTaskClick(project.id)}>
-                    <View key={project.id} style={{ marginTop: 12, backgroundColor: "gray", padding: 5 }}>
-                        <Text style={{ color: "white" }}>{project.name}</Text>
-                        <Text style={{ color: "white" }}>{project.description}</Text>
+                    <View key={project.id} style={{ marginTop: 12, backgroundColor: "#40534C", padding: 10, borderRadius: 10 }}>
+                        <Text style={{ color: "white", fontFamily: "MontserratSemibold", fontSize: 15 }}>{project.name}</Text>
+                        <Text style={{ color: "white", fontFamily: "MontserratRegular", fontSize: 15 }}>{project.description}</Text>
                     </View>
                     // </TouchableOpacity>
                 ))}
