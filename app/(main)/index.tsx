@@ -8,7 +8,6 @@ import { imagesData } from '@/constants/images';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import CustomDrawer from '@/components/ui/CustomDrawer';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import Feather from '@expo/vector-icons/Feather';
 
 const Main = () => {
     const { user } = useAuth();

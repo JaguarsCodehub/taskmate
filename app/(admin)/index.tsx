@@ -27,7 +27,7 @@ const AdminDashboard = () => {
             <View style={styles.container}>
                 <LinearGradient
                     // Background Linear Gradient
-                    colors={['#f5f7fa', '#c3cfe2']}
+                    colors={['#fdfcfb', '#e2d1c3']}
                     style={styles.background}
                 />
                 <View style={{ padding: 20, marginTop: 10 }}>

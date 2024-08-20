@@ -16,7 +16,7 @@ export default function RootLayout() {
             const { data, error: roleError } = await supabase
                 .from('users')
                 .select('role')
-                .eq('id', user?.id)
+                .eq('id', userId)
                 .single();
 
             if (roleError) {
