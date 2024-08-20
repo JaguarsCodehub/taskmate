@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Picker } from '@react-native-picker/picker'
 import { supabase } from '@/utils/supabase'
 import { router } from 'expo-router';
+import { LinearGradient } from 'expo-linear-gradient';
 
 interface Tasks {
     id: string;
@@ -35,24 +36,43 @@ const UpdateTask = () => {
 
     return (
         <ScrollView>
-            <View>
-                <Text>UpdateTask</Text>
+            <LinearGradient
+                colors={['#e2d1c3', '#e2d1c3']}
+                style={styles.background}
+            />
+            <View style={{ paddingHorizontal: 20, marginTop: 20 }}>
+                <Text style={{ fontSize: 20, fontFamily: "MontserratSemibold" }}>Update Tasks data</Text>
+                <Text style={{ fontSize: 15, fontFamily: "MontserratRegular" }}>You can update specific tasks to users</Text>
             </View>
             <View className='m-6'>
                 {oldTasksData.map((task) => (
                     <TouchableOpacity key={task.id} onPress={() => handleTaskClick(task.id)}>
-                        <View className='border p-4 mb-4' key={task.id}>
-                            <Text>Title: {task.title}</Text>
-                            <Text>Description: {task.description}</Text>
-                            <Text>Priority: {task.priority}</Text>
+                        <View style={{ padding: 10, backgroundColor: "#7E6363", marginTop: 15, borderRadius: 5 }} key={task.id}>
+                            <Text style={styles.text}>Title: {task.title}</Text>
+                            <Text style={styles.text}>Description: {task.description}</Text>
+                            <Text style={styles.text}>Priority: {task.priority}</Text>
                         </View>
                     </TouchableOpacity>
                 ))}
             </View>
-
         </ScrollView>
     )
 }
 
 export default UpdateTask
 
+const styles = StyleSheet.create({
+    background: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        top: 0,
+        height: '100%',
+    },
+    text: {
+        fontSize: 15,
+        fontFamily: "MontserratMedium",
+        marginTop: 10,
+        color: "white"
+    },
+})

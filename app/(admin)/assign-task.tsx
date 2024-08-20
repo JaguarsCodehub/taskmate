@@ -1,8 +1,12 @@
-import { Alert, Button, Platform, ScrollView, Text, View } from 'react-native';
+import { Alert, Button, Dimensions, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { supabase } from '@/utils/supabase';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
+import PMMeetingComponent from '@/components/PMMeetingComponent';
+import { LinearGradient } from 'expo-linear-gradient';
+
+const { width, height } = Dimensions.get('window');
 
 interface Task {
     id: string;
@@ -118,25 +122,37 @@ const AssignTask = () => {
         setDeadlineDate(currentDate);
     };
 
+    // e2d1c3 fdfcfb
     return (
         <ScrollView>
+            <LinearGradient
+                colors={['#e2d1c3', '#e2d1c3']}
+                style={styles.background}
+            />
             <View className='p-8'>
-                <Text style={{ fontSize: 20, fontFamily: "MontserratSemibold" }}>Assign Task Screen</Text>
+
+                <Text style={{ fontSize: 25, fontFamily: "MontserratSemibold" }}>Assign Tasks to users</Text>
+                <Text style={{ fontSize: 15, fontFamily: "MontserratRegular" }}>You can assign specific tasks to users</Text>
             </View>
-            <View className='p-8'>
-                <Text>Select Task</Text>
+            <View style={{ paddingHorizontal: 20 }}>
+                <PMMeetingComponent />
+            </View>
+            <View className='px-8'>
+                <Text style={styles.text}>Select Tasks from Vault</Text>
                 <Picker
                     selectedValue={selectedTaskId}
                     onValueChange={(itemValue) => setSelectedTaskId(itemValue)}
+                    style={styles.picker}
                 >
-                    <Picker.Item label="Select a task" value="" />
+                    <Picker.Item label="Select a task" value="" style={{ borderRadius: 20 }} />
                     {tasks.map((task) => (
-                        <Picker.Item key={task.id} label={task.title} value={task.id} />
+                        <Picker.Item key={task.id} label={task.title} value={task.id} style={{ borderRadius: 20 }} />
                     ))}
                 </Picker>
 
-                <Text>Select User</Text>
+                <Text style={styles.text}>Select user to assign</Text>
                 <Picker
+                    style={styles.picker}
                     selectedValue={selectedUserId}
                     onValueChange={(itemValue) => setSelectedUserId(itemValue)}
                 >
@@ -146,8 +162,9 @@ const AssignTask = () => {
                     ))}
                 </Picker>
 
-                <Text>Select Project</Text>
+                <Text style={styles.text}>Select one Project</Text>
                 <Picker
+                    style={styles.picker}
                     selectedValue={selectedProjectId}
                     onValueChange={(itemValue) => setSelectedProjectId(itemValue)}
                 >
@@ -157,8 +174,9 @@ const AssignTask = () => {
                     ))}
                 </Picker>
 
-                <Text>Select Client</Text>
+                <Text style={styles.text}>Select a Client</Text>
                 <Picker
+                    style={styles.picker}
                     selectedValue={selectedClientId}
                     onValueChange={(itemValue) => setSelectedClientId(itemValue)}
                 >
@@ -168,39 +186,49 @@ const AssignTask = () => {
                     ))}
                 </Picker>
 
-                <Text>Start Date</Text>
-                <Button
-                    title={startDate ? startDate.toDateString() : 'Select Start Date'}
-                    onPress={() => setShowStartDatePicker(true)}
-                />
+                <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", marginTop: 20 }}>
+                    <View>
+                        <Text style={styles.text}>Start Date</Text>
+                        <Button
+                            title={startDate ? startDate.toDateString() : 'Select Start Date'}
+                            onPress={() => setShowStartDatePicker(true)}
+                            color={'#65503b'}
+                        />
 
-                {showStartDatePicker && (
-                    <DateTimePicker
-                        value={startDate || new Date()}
-                        mode="date"
-                        display="default"
-                        onChange={onStartDateChange}
-                        minimumDate={new Date()}
-                    />
-                )}
+                        {showStartDatePicker && (
+                            <DateTimePicker
+                                value={startDate || new Date()}
+                                mode="date"
+                                display="default"
+                                onChange={onStartDateChange}
+                                minimumDate={new Date()}
+                            />
+                        )}
 
-                <Text>Deadline Date</Text>
-                <Button
-                    title={deadlineDate ? deadlineDate.toDateString() : 'Select Deadline Date'}
-                    onPress={() => setShowDeadlineDatePicker(true)}
-                />
+                    </View>
+                    <View>
+                        <Text style={styles.text}>Deadline Date</Text>
+                        <Button
+                            title={deadlineDate ? deadlineDate.toDateString() : 'Select Deadline Date'}
+                            onPress={() => setShowDeadlineDatePicker(true)}
+                            color={'#65503b'}
+                        />
 
-                {showDeadlineDatePicker && (
-                    <DateTimePicker
-                        value={deadlineDate || new Date()}
-                        mode="date"
-                        display="default"
-                        onChange={onDeadlineDateChange}
-                    />
-                )}
+                        {showDeadlineDatePicker && (
+                            <DateTimePicker
+                                value={deadlineDate || new Date()}
+                                mode="date"
+                                display="default"
+                                onChange={onDeadlineDateChange}
+                            />
+                        )}
+                    </View>
+                </View>
 
-                <View style={{ marginTop: 20 }}>
-                    <Button title="Assign Task" onPress={handleAssignTask} />
+                <View style={{ marginTop: 20, paddingBottom: 60 }}>
+                    <TouchableOpacity onPress={handleAssignTask} style={{ backgroundColor: "#B99470", padding: 10, borderRadius: 5, paddingVertical: 10 }}>
+                        <Text style={{ fontSize: 20, fontFamily: "MontserratSemibold", textAlign: "center", color: "white" }}>Assign Task</Text>
+                    </TouchableOpacity>
                 </View>
             </View>
         </ScrollView>
@@ -208,3 +236,25 @@ const AssignTask = () => {
 };
 
 export default AssignTask;
+
+const styles = StyleSheet.create({
+    text: {
+        fontSize: 15,
+        fontFamily: "MontserratSemibold",
+        marginTop: 10,
+        color: "#65503b"
+    },
+    picker: {
+        backgroundColor: "white",
+        borderRadius: 10,
+        marginTop: 10,
+        // padding:
+    },
+    background: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        top: 0,
+        height: '100%',
+    }
+})
