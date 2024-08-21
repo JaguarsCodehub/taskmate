@@ -114,8 +114,9 @@ const Main = () => {
                     <Text style={{ fontSize: 20, fontWeight: "600", marginLeft: 10, fontFamily: "MontserratMedium" }}>TaskMate</Text>
                 </View>
                 <View style={{ display: "flex", flexDirection: "row" }}>
-                    <Image source={require("@/assets/images/avatar2.jpg")} style={styles.profileImage} />
-
+                    <TouchableOpacity onPress={() => router.push('/(main)/profile')}>
+                        <Image source={require("@/assets/images/avatar2.jpg")} style={styles.profileImage} />
+                    </TouchableOpacity>
                     <TouchableOpacity onPress={openDrawer}>
                         <Image source={require("@/assets/images/menu.png")} style={styles.drawerImage} />
                     </TouchableOpacity>

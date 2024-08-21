@@ -6,7 +6,8 @@
     - User's report
     - Mark as Complete needs a validation of image
 - Admin TODOS:
-    - 
+    - Dropdown for priorities
+    - Individual report for each tasks
 ## Tasks Completed:
 
 ### Authentication
