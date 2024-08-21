@@ -1,15 +1,17 @@
 # Task Management Mobile Application
 
 ## TODOS:
-- Admin UI 
+- Admin UI ✅
 - Report of a specific user based on dates
 - Logs of a tasks done
-- User Profile (Read, Update, Delete)
-- Change Password (maybe)
+- User Profile (Read, Update, Delete) ✅
 - User Interface Turnaround :
     - Made some changes to Users Dashboard ✅
     - Added Logout Functionality ✅
     - Also added Rerouting to (auth) if user has signed out ✅
+    - User's report
+    - Mark as Complete needs a validation of image
+    - Show User's Profile on Dashboard
 
 ## Tasks Completed:
 

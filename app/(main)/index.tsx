@@ -63,7 +63,6 @@ const Main = () => {
             }
         };
 
-
         fetchTodayTasks();
     }, [userId, todayTasks]);
 
@@ -74,7 +73,7 @@ const Main = () => {
 
     const renderTaskItem = ({ item }: { item: any }) => (
         <View style={{
-            backgroundColor: item.tasks.priority === "low" ? "#5AB2FF" : "#FF8A8A",
+            backgroundColor: "#5C8374",
             padding: 20,
             borderBottomWidth: 1,
             borderBottomColor: '#ccc',
