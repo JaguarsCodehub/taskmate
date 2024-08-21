@@ -17,34 +17,35 @@ interface Users {
 }
 
 const Profile = () => {
-    const { user } = useAuth()
-    const userId = user?.id
+    const { user } = useAuth();
+    const userId = user?.id;
     const [users, setUsers] = useState<Users>();
-    const [image, setImage] = useState('')
+    const [image, setImage] = useState('');
+    const [newUsername, setNewUsername] = useState('');
+    const [newFullName, setNewFullName] = useState('');
 
     useEffect(() => {
         const fetchUsers = async () => {
-            console.log("UserId: ", userId)
             const { data, error } = await supabase
                 .from('users')
                 .select('id, full_name, username, avatar_url')
                 .eq('id', userId)
-                .single()
+                .single();
             if (error) {
                 console.error(error);
-                Alert.alert('Error', 'Could not fetch users');
+                Alert.alert('Error', 'Could not fetch user data');
             } else {
                 setUsers(data);
-                setImage(data.avatar_url)
+                setImage(data.avatar_url);
+                setNewUsername(data.username);
+                setNewFullName(data.full_name);
             }
         };
 
-        fetchUsers()
-        console.log("Users Data:", users)
-    }, [])
+        fetchUsers();
+    }, [userId]);
 
     const pickImage = async () => {
-        // Request permission to access media library
         const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
         if (!permissionResult.granted) {
@@ -52,7 +53,6 @@ const Profile = () => {
             return;
         }
 
-        // Launch the image picker
         const result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
@@ -61,20 +61,43 @@ const Profile = () => {
         });
 
         if (!result.canceled) {
-            const { uri } = result.assets[0];  // Retrieve the selected image's URI
-            // Upload the image to Supabase storage and update avatar_url in the database (this will be a separate function)
-            uploadImageAsync(uri);
-            setImage(uri)
+            const { uri } = result.assets[0];
+            try {
+                const imageUrl = await uploadImageAsync(uri);
+                if (imageUrl) {
+                    setImage(imageUrl);
+                } else {
+                    Alert.alert('Error', 'Could not upload image');
+                }
+            } catch (error) {
+                Alert.alert('Error', 'Could not upload image');
+                console.error(error);
+            }
         }
     };
 
-    const updateProfile = () => {
+
+    const updateProfile = async () => {
         try {
+            const { data, error } = await supabase
+                .from('users')
+                .update({
+                    username: newUsername,
+                    full_name: newFullName,
+                    avatar_url: image
+                })
+                .eq('id', userId);
 
+            if (error) {
+                throw error;
+            } else {
+                Alert.alert('Success', 'Profile updated successfully');
+            }
         } catch (error) {
-
+            Alert.alert('Error', 'Could not update profile');
+            console.error(error);
         }
-    }
+    };
 
 
     return (
@@ -87,11 +110,12 @@ const Profile = () => {
                 <Text style={{ fontSize: 25, fontFamily: "MontserratSemibold" }}>Update Profile</Text>
                 <View style={{ marginTop: 25 }}>
                     <Text style={{ fontSize: 20, fontFamily: "MontserratSemibold" }}>Current Username</Text>
-                    <TextInput placeholder={users?.username} style={{ fontSize: 15, fontFamily: "MontserratSemibold" }} />
+                    <TextInput placeholder={users?.username} value={newUsername}
+                        onChangeText={setNewUsername} style={{ fontSize: 15, fontFamily: "MontserratSemibold" }} />
                 </View>
                 <View style={{ marginTop: 25 }}>
                     <Text style={{ fontSize: 20, fontFamily: "MontserratSemibold" }}>Your Full Name</Text>
-                    <TextInput placeholder={users?.full_name} style={{ fontSize: 15, fontFamily: "MontserratSemibold" }} />
+                    <TextInput placeholder={users?.full_name} value={newFullName} onChangeText={setNewFullName} style={{ fontSize: 15, fontFamily: "MontserratSemibold" }} />
                 </View>
                 <View style={{ marginTop: 25 }}>
                     <Text style={{ fontSize: 20, fontFamily: "MontserratSemibold" }}>Your Profile Photo</Text>
@@ -107,7 +131,7 @@ const Profile = () => {
                     </View>
                 </View>
                 <View style={{ marginTop: 25 }}>
-                    <TouchableOpacity style={{ backgroundColor: "#40534C", padding: 10, borderRadius: 10 }}>
+                    <TouchableOpacity onPress={updateProfile} style={{ backgroundColor: "#40534C", padding: 10, borderRadius: 10 }}>
                         <Text style={{ fontSize: 15, fontFamily: "MontserratSemibold", color: "white", textAlign: "center" }}>Save Profile</Text>
                     </TouchableOpacity>
                 </View>

@@ -11,18 +11,18 @@ const generateUUID = () => {
 
 export const uploadImageAsync = async (uri: string): Promise<string | null> => {
     try {
-        const localUri = uri;
+        const fileName = generateUUID() + '.jpg';
 
         const formData = new FormData();
         formData.append('file', {
-            uri: localUri,
-            name: localUri.split('/').pop() || `photo-${generateUUID()}.jpg`,
+            uri,
+            name: fileName,
             type: 'image/jpeg',
         } as any);
 
         const { data, error } = await supabase.storage
             .from('profiles')
-            .upload(generateUUID() + '.jpg', formData, {
+            .upload(fileName, formData, {
                 contentType: 'image/jpeg',
             });
 
@@ -31,13 +31,17 @@ export const uploadImageAsync = async (uri: string): Promise<string | null> => {
             return null;
         }
 
-        const { publicUrl } = supabase
+        const { data: publicUrlData, } = supabase
             .storage
             .from('profiles')
-            .getPublicUrl(data.path)
-            .data;
+            .getPublicUrl(data.path);
 
-        return publicUrl;
+        // if (publicUrlError) {
+        //     console.error('Error getting public URL:', publicUrlError.message);
+        //     return null;
+        // }
+
+        return publicUrlData.publicUrl;
     } catch (error) {
         console.error('Error uploading image:', error);
         return null;
