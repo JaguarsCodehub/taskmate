@@ -1,4 +1,4 @@
-import { Button, ScrollView, StyleSheet, Text, View, Dimensions, Alert, TouchableOpacity, Touchable } from 'react-native'
+import { Button, ScrollView, StyleSheet, Text, View, Dimensions, Alert, TouchableOpacity, Touchable, Image } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { router } from 'expo-router'
 import { LinearGradient } from 'expo-linear-gradient';
@@ -7,6 +7,7 @@ import { format, startOfToday, endOfToday } from 'date-fns';
 import { supabase } from '@/utils/supabase';
 import { useAuth } from '@/providers/AuthProvider';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import AdminDrawer from '@/components/ui/AdminDrawer';
 
 
 const { width, height } = Dimensions.get('window');
@@ -22,17 +23,35 @@ const AdminDashboard = () => {
         return format(date, 'd MMMM yyyy');
     };
 
+    const [isDrawerOpen, setDrawerOpen] = useState(false);
+
+    const openDrawer = () => {
+        setDrawerOpen(!isDrawerOpen);
+    };
+
+    const closeDrawer = () => {
+        setDrawerOpen(false)
+    }
+
     return (
         <ScrollView>
+            <AdminDrawer isOpen={isDrawerOpen} closeDrawer={closeDrawer} />
             <View style={styles.container}>
                 <LinearGradient
                     // Background Linear Gradient
                     colors={['#fdfcfb', '#e2d1c3']}
                     style={styles.background}
                 />
-                <View style={{ padding: 20, marginTop: 10 }}>
-                    <Text className='text-2xl' style={{ fontFamily: "MontserratSemibold", fontSize: 25 }}>Hello, Admin</Text>
-                    <Text className='text-2xl' style={{ fontFamily: "MontserratRegular", fontSize: 20 }}>This is your Admin Dashboard</Text>
+                <View style={{ padding: 20, marginTop: 10, display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+                    <View>
+                        <Text className='text-2xl' style={{ fontFamily: "MontserratSemibold", fontSize: 25 }}>Hello, Admin</Text>
+                        <Text className='text-2xl' style={{ fontFamily: "MontserratRegular", fontSize: 20 }}>This is your Admin Dashboard</Text>
+                    </View>
+                    <View>
+                        <TouchableOpacity onPress={openDrawer}>
+                            <Image source={require("@/assets/images/menu.png")} style={styles.drawerImage} />
+                        </TouchableOpacity>
+                    </View>
                 </View>
 
                 <View style={{ paddingHorizontal: 20 }}>
@@ -136,6 +155,10 @@ const styles = StyleSheet.create({
         right: 0,
         top: 0,
         height: height,
-    }
+    },
+    drawerImage: {
+        width: 30,
+        height: 30,
+    },
 })
 
