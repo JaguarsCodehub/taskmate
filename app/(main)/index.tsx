@@ -116,14 +116,7 @@ const Main = () => {
             </View>
             <View style={{ padding: 20 }}>
                 <Text style={styles.header}>Start your Day & Be Productive ✌</Text>
-                {/* <View style={styles.avatarContainer}>
-                    {imagesData.map((image) => (
-                        <Image key={image.id} source={image.source} style={styles.avatarImage} />
-                    ))}
-                    <View style={styles.moreTasksContainer}>
-                        <Text style={styles.moreTasksText}>10+</Text>
-                    </View>
-                </View> */}
+
 
                 <View style={{ backgroundColor: "#40534C", padding: 10, borderRadius: 10, marginTop: 10 }}>
                     <View style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
@@ -162,12 +155,6 @@ const Main = () => {
                                 }}>Complete the below remaining tasks.</Text>
                                 {/* <Feather name="chevron-down" size={20} color="white " />  */}
                             </View>
-                            {/* <Text style={{
-                                fontSize: 15,
-                                fontFamily: 'MontserratSemibold',
-                                color: "black"
-                            }}></Text> */}
-
                         </>
                     )}
                 </View>

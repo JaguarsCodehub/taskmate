@@ -13,7 +13,7 @@ const drawerItems = [
     {
         label: 'Profile',
         icon: 'person',
-        path: '/profile',
+        path: '/(main)/profile',
         items: [],
     },
     {
