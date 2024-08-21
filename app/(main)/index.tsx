@@ -24,9 +24,6 @@ const Main = () => {
         setDrawerOpen(false)
     }
 
-
-
-
     useEffect(() => {
         const fetchTodayTasks = async () => {
             const todayStart = startOfToday().toISOString();
@@ -41,6 +38,7 @@ const Main = () => {
                     tasks (
                         id,
                         title,
+                        description,
                         priority
                     ),
                     assigned_by (full_name),
@@ -68,12 +66,12 @@ const Main = () => {
 
     const formatDate = (dateString: string) => {
         const date = new Date(dateString);
-        return format(date, 'd MMMM yyyy');
+        return format(date, 'd MMMM');
     };
 
     const renderTaskItem = ({ item }: { item: any }) => (
         <View style={{
-            backgroundColor: "#5C8374",
+            backgroundColor: "#9CA986",
             padding: 20,
             borderBottomWidth: 1,
             borderBottomColor: '#ccc',
@@ -81,13 +79,21 @@ const Main = () => {
             borderRadius: 10,
             marginTop: 10
         }}>
-            <Text style={{ fontSize: 20, fontFamily: "MontserratSemibold" }}>{item.tasks?.title || 'No title'}</Text>
-            <Text style={{ fontSize: 16, fontFamily: "MontserratMedium" }}>Assigned By: {item.assigned_by?.full_name || 'Unknown'}</Text>
-            {/* <Text>Project: {item.projects?.name || 'No project'}</Text> */}
-            {/* <Text>Client: {item.clients?.name || 'No client'}</Text> */}
-            {/* <Text>Start: {item.start_date ? formatDate(item.start_date) : 'No start date'}</Text> */}
-            <Text style={{ fontSize: 16, fontFamily: "MontserratMedium" }}>Deadline: {item.due_date ? formatDate(item.due_date) : 'No due date'}</Text>
-            <Text style={{ fontSize: 16, fontFamily: "MontserratMedium" }}>Priority: {item.tasks?.priority || 'No priority'}</Text>
+            <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+                <View style={{ backgroundColor: "#FEFAE0", padding: 5, width: '30%', borderRadius: 25, alignItems: "center" }}>
+                    <Text style={{ fontSize: 12, fontFamily: "MontserratMedium" }}>{item.start_date ? formatDate(item.start_date) : 'No start date'}</Text>
+                </View>
+                <View style={{ backgroundColor: "#FEFAE0", padding: 5, width: '30%', borderRadius: 25, alignItems: "center" }}>
+                    <Text style={{ fontSize: 12, fontFamily: "MontserratMedium" }}>{item.tasks?.priority || 'No priority'}</Text>
+                </View>
+            </View>
+            <View style={{ marginTop: 20 }}>
+                <Text style={{ fontSize: 20, fontFamily: "MontserratBold", color: "#FEFAE0" }}>{item.tasks?.title || 'No title'}</Text>
+                <Text style={{ fontSize: 16, fontFamily: "MontserratSemibold", color: "#FEFAE0" }}>{item.tasks?.description || 'No description'}</Text>
+                <Text style={{ fontSize: 16, fontFamily: "MontserratMedium", color: "#FEFAE0" }}>Assigned By: {item.assigned_by?.full_name || 'Unknown'}</Text>
+                {/* <Text>Project: {item.projects?.name || 'No project'}</Text> */}
+                {/* <Text>Client: {item.clients?.name || 'No client'}</Text> */}
+            </View>
         </View>
     );
 
@@ -99,8 +105,6 @@ const Main = () => {
         </>
     );
 
-
-
     return (
         <ScrollView>
             <CustomDrawer isOpen={isDrawerOpen} closeDrawer={closeDrawer} />
@@ -109,14 +113,16 @@ const Main = () => {
                     <Image source={require("@/assets/images/swift.png")} style={styles.logoImage} />
                     <Text style={{ fontSize: 20, fontWeight: "600", marginLeft: 10, fontFamily: "MontserratMedium" }}>TaskMate</Text>
                 </View>
-                <TouchableOpacity onPress={openDrawer}>
-                    <Image source={require("@/assets/images/menu.png")} style={styles.drawerImage} />
-                </TouchableOpacity>
+                <View style={{ display: "flex", flexDirection: "row" }}>
+                    <Image source={require("@/assets/images/avatar2.jpg")} style={styles.profileImage} />
+
+                    <TouchableOpacity onPress={openDrawer}>
+                        <Image source={require("@/assets/images/menu.png")} style={styles.drawerImage} />
+                    </TouchableOpacity>
+                </View>
             </View>
             <View style={{ padding: 20 }}>
                 <Text style={styles.header}>Start your Day & Be Productive ✌</Text>
-
-
                 <View style={{ backgroundColor: "#40534C", padding: 10, borderRadius: 10, marginTop: 10 }}>
                     <View style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
                         <Ionicons name="calendar" size={24} color="#fff" />
@@ -201,6 +207,12 @@ const styles = StyleSheet.create({
         width: 25,
         height: 25,
         marginRight: 30
+    },
+    profileImage: {
+        width: 25,
+        height: 25,
+        borderRadius: 25,
+        marginRight: 10
     },
     avatarContainer: {
         display: 'flex',
