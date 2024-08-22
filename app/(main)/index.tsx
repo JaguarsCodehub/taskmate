@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, FlatList, Alert, ScrollView } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, FlatList, Alert, ScrollView, Touchable } from 'react-native';
 import { useAuth } from '@/providers/AuthProvider';
 import { supabase } from '@/utils/supabase'; // Adjust the import as needed
 import { format, startOfToday, endOfToday } from 'date-fns';
@@ -7,6 +7,7 @@ import { router } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import CustomDrawer from '@/components/ui/CustomDrawer';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
+import Feather from '@expo/vector-icons/Feather';
 
 const Main = () => {
     const { user } = useAuth();
@@ -40,7 +41,7 @@ const Main = () => {
                         description,
                         priority
                     ),
-                    assigned_by (full_name),
+                    assigned_by (full_name, avatar_url),
                     projects!fk_project_id (
                         name
                     ),
@@ -82,16 +83,29 @@ const Main = () => {
                 <View style={{ backgroundColor: "#FEFAE0", padding: 5, width: '30%', borderRadius: 25, alignItems: "center" }}>
                     <Text style={{ fontSize: 12, fontFamily: "MontserratMedium" }}>{item.start_date ? formatDate(item.start_date) : 'No start date'}</Text>
                 </View>
-                <View style={{ backgroundColor: "#FEFAE0", padding: 5, width: '30%', borderRadius: 25, alignItems: "center" }}>
-                    <Text style={{ fontSize: 12, fontFamily: "MontserratMedium" }}>{item.tasks?.priority || 'No priority'}</Text>
+                <View style={{ alignItems: "center" }}>
+                    {/* <Text style={{ fontSize: 12, fontFamily: "MontserratMedium" }}>{item.tasks?.priority || 'No priority'}</Text> */}
+                    <Image source={{ uri: item.assigned_by?.avatar_url }} style={styles.avatarAdmin} />
                 </View>
             </View>
             <View style={{ marginTop: 20 }}>
                 <Text style={{ fontSize: 20, fontFamily: "MontserratBold", color: "#FEFAE0" }}>{item.tasks?.title || 'No title'}</Text>
                 <Text style={{ fontSize: 16, fontFamily: "MontserratSemibold", color: "#FEFAE0" }}>{item.tasks?.description || 'No description'}</Text>
-                <Text style={{ fontSize: 16, fontFamily: "MontserratMedium", color: "#FEFAE0" }}>Assigned By: {item.assigned_by?.full_name || 'Unknown'}</Text>
-                {/* <Text>Project: {item.projects?.name || 'No project'}</Text> */}
-                {/* <Text>Client: {item.clients?.name || 'No client'}</Text> */}
+                <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", marginTop: 20 }}>
+                    <View style={{ display: "flex", flexDirection: "row" }}>
+                        <View style={{ backgroundColor: "#FFF", padding: 5, paddingHorizontal: 10, borderRadius: 20, alignItems: "center", marginRight: 10 }}>
+                            <Text style={{ fontSize: 14, fontFamily: "MontserratMedium", color: "#000", textAlign: "center" }}>Today</Text>
+                        </View>
+                        <View style={{ backgroundColor: "#FFF", paddingVertical: 5, paddingHorizontal: 10, borderRadius: 20, alignItems: "center" }}>
+                            <Text style={{ fontSize: 14, fontFamily: "MontserratMedium", color: "#000" }}>{item.tasks.priority || 'No priority'}</Text>
+                        </View>
+                    </View>
+                    <TouchableOpacity>
+                        <View style={{ backgroundColor: "#FEFAE0", padding: 5, borderRadius: 20 }}>
+                            <Feather name="arrow-up-right" size={24} color="#000" />
+                        </View>
+                    </TouchableOpacity>
+                </View>
             </View>
         </View>
     );
@@ -213,6 +227,11 @@ const styles = StyleSheet.create({
         height: 25,
         borderRadius: 25,
         marginRight: 10
+    },
+    avatarAdmin: {
+        width: 25,
+        height: 25,
+        borderRadius: 25
     },
     avatarContainer: {
         display: 'flex',

@@ -6,7 +6,8 @@
     - User's report
     - Mark as Complete needs a validation of image
 - Admin TODOS:
-    - Dropdown for priorities
+    - Dropdown for priorities ✅
+    - Task Component UI ✅
     - Individual report for each tasks
 ## Tasks Completed:
 
@@ -14,7 +15,7 @@
 1. Authentication for Users and Admin with Id and Password ✅
 
 ### Users can:
-1. Create a Task *(for themselves), Delete a Task, Read their Tasks. ✅⛔
+1. Create a Task *(for themselves), Delete a Task, Read their Tasks. ✅
 2. Assigned Dashboard to check their assigned tasks. ✅
 3. Users can check who has assigned the task, when and on what *project to which *client. ✅
 4. Tasks will be filtered as per priority (low, medium, high) ✅
