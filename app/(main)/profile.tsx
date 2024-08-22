@@ -106,7 +106,7 @@ const Profile = () => {
                 colors={['#fdfcfb', '#677D6A']}
                 style={styles.background}
             />
-            <View className='h-screen p-8'>
+            <View style={{ padding: 20, height: '100%' }}>
                 <Text style={{ fontSize: 25, fontFamily: "MontserratSemibold" }}>Update Profile</Text>
                 <View style={{ marginTop: 25 }}>
                     <Text style={{ fontSize: 20, fontFamily: "MontserratSemibold" }}>Current Username</Text>

@@ -59,9 +59,9 @@ const UpdateProject = () => {
 
 
     return (
-        <View className='p-8'>
+        <View style={{ padding: 20 }}>
             <View>
-                <Text className='text-2xl'>Update Project</Text>
+                <Text>Update Project</Text>
             </View>
             <View style={{ marginTop: 24 }}>
                 <Text>Change Name</Text>

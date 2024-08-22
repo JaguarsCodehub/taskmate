@@ -129,7 +129,7 @@ const AssignTask = () => {
                 colors={['#40534C', '#e2d1c3']}
                 style={styles.background}
             />
-            <View className='p-8'>
+            <View style={{ padding: 20 }}>
 
                 <Text style={{ fontSize: 25, fontFamily: "MontserratSemibold", color: "white" }}>Assign Tasks to users</Text>
                 <Text style={{ fontSize: 15, fontFamily: "MontserratRegular", color: "white" }}>You can assign specific tasks to users</Text>
@@ -137,7 +137,7 @@ const AssignTask = () => {
             <View style={{ paddingHorizontal: 20 }}>
                 <PMMeetingComponent />
             </View>
-            <View className='px-8'>
+            <View style={{ paddingHorizontal: 20 }}>
                 <Text style={styles.text}>Select Tasks from Vault</Text>
                 <Picker
                     selectedValue={selectedTaskId}

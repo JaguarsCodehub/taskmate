@@ -93,7 +93,7 @@ const TaskDetailScreen = () => {
 
     if (!task) {
         return (
-            <View className='p-8'>
+            <View style={{ padding: 20 }}>
                 <Text>Loading...</Text>
             </View>
         );
@@ -105,7 +105,7 @@ const TaskDetailScreen = () => {
                 colors={['#e2d1c3', '#e2d1c3']}
                 style={styles.background}
             />
-            <View className='p-8 h-screen'>
+            <View style={{ padding: 20, height: '100%' }}>
                 <View>
                     <Text style={{ fontSize: 20, fontFamily: "MontserratSemibold" }}>Update specific Task</Text>
                 </View>

@@ -44,8 +44,8 @@ const AdminDashboard = () => {
                 />
                 <View style={{ padding: 20, marginTop: 10, display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
                     <View>
-                        <Text className='text-2xl' style={{ fontFamily: "MontserratSemibold", fontSize: 25 }}>Hello, Admin</Text>
-                        <Text className='text-2xl' style={{ fontFamily: "MontserratRegular", fontSize: 20 }}>This is your Admin Dashboard</Text>
+                        <Text style={{ fontFamily: "MontserratSemibold", fontSize: 25 }}>Hello, Admin</Text>
+                        <Text style={{ fontFamily: "MontserratRegular", fontSize: 20 }}>This is your Admin Dashboard</Text>
                     </View>
                     <View>
                         <TouchableOpacity onPress={openDrawer}>
@@ -115,36 +115,7 @@ const AdminDashboard = () => {
                         </View>
                     </TouchableOpacity>
                 </View>
-                {/* <View className='mt-4 px-6'>
-                <Button
-                    title='Create New Task'
-                    onPress={() => router.push('/(admin)/create-task')}
-                />
-            </View>
-            <View className='mt-4 px-6'>
-                <Button
-                    title='Assign Tasks'
-                    onPress={() => router.push('/(admin)/assign-task')}
-                />
-            </View>
-            <View className='mt-4 px-6'>
-                <Button
-                    title='Update Task'
-                    onPress={() => router.push('/(admin)\\update-task')}
-                />
-            </View>
-            <View className='mt-4 px-6'>
-                <Button
-                    title='Delete Tasks'
-                    onPress={() => router.push('/(admin)/delete-task')}
-                />
-            </View>
-            <View className='mt-4 px-6'>
-                <Button
-                    title='Projects'
-                    onPress={() => router.push('/(admin)/projects')}
-                />
-            </View> */}
+
             </View>
 
         </ScrollView>

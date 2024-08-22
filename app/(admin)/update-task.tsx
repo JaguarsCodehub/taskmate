@@ -44,7 +44,7 @@ const UpdateTask = () => {
                 <Text style={{ fontSize: 20, fontFamily: "MontserratSemibold" }}>Update Tasks data</Text>
                 <Text style={{ fontSize: 15, fontFamily: "MontserratRegular" }}>You can update specific tasks to users</Text>
             </View>
-            <View className='m-6'>
+            <View style={{ margin: 10 }}>
                 {oldTasksData.map((task) => (
                     <TouchableOpacity key={task.id} onPress={() => handleTaskClick(task.id)}>
                         <View style={{ padding: 10, backgroundColor: "#7E6363", marginTop: 15, borderRadius: 5 }} key={task.id}>

@@ -36,7 +36,7 @@ const CreateTaskScreen = () => {
     };
 
     return (
-        <View className='p-4'>
+        <View style={{ padding: 10 }}>
             <LinearGradient
                 colors={['#40534C', '#e2d1c3']}
                 style={styles.background}

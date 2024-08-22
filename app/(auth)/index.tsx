@@ -86,7 +86,7 @@ export default function Auth() {
                     placeholderClassName='text-white'
                     placeholderTextColor={'white'}
                     autoCapitalize={'none'}
-                    className="border-2 border-[white] p-3 rounded-md"
+                    style={{ borderWidth: 2, borderColor: "white", padding: 5, borderRadius: 10 }}
                 />
             </View>
             <View style={styles.verticallySpaced}>
@@ -97,8 +97,8 @@ export default function Auth() {
                     placeholder="Enter your Password"
                     placeholderClassName='text-white'
                     placeholderTextColor={'white'}
+                    style={{ borderWidth: 2, borderColor: "white", padding: 5, borderRadius: 10 }}
                     autoCapitalize={'none'}
-                    className="border-2 border-[white] p-3 rounded-md"
                 />
             </View>
             <View style={{ display: "flex", marginBottom: 80 }}>
