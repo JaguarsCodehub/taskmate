@@ -3,7 +3,7 @@
 ## TODOS:
 - Report of a specific user based on dates
 - User Interface Turnaround :
-    - User's report
+    - User's report ✅
     - Mark as Complete needs a validation of image
 - Admin TODOS:
     - Dropdown for priorities ✅

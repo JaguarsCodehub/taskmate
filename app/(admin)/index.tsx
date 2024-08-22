@@ -103,6 +103,17 @@ const AdminDashboard = () => {
                             <Text style={{ fontSize: 15, fontFamily: "MontserratSemibold", color: "white" }}>Tasks are created for users to complete it</Text>
                         </View>
                     </TouchableOpacity>
+                    <TouchableOpacity onPress={() => router.push('/(admin)\\user-report')}>
+                        <View style={{ backgroundColor: "#FFF", padding: 10, borderRadius: 10, marginTop: 10 }}>
+                            <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+                                <Text style={{ fontSize: 20, fontFamily: "MontserratSemibold", color: "black" }}>Get User's Report</Text>
+                                <View style={{ backgroundColor: "#F8EDED", padding: 2, width: 60, borderRadius: 10, alignItems: "center", justifyContent: "center" }}>
+                                    <Text style={{ fontSize: 10, fontFamily: "MontserratSemibold", color: "black", textAlign: "center" }}>projects</Text>
+                                </View>
+                            </View>
+                            <Text style={{ fontSize: 15, fontFamily: "MontserratRegular", color: "black" }}>Get details on User's Report</Text>
+                        </View>
+                    </TouchableOpacity>
                 </View>
                 {/* <View className='mt-4 px-6'>
                 <Button
