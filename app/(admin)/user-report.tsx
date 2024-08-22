@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, ActivityIndicator, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator, ScrollView } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { supabase } from '@/utils/supabase';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import ReportTasks from '@/components/ui/ReportTasks';
 
 interface User {
     id: string;
@@ -117,23 +118,8 @@ const UserReport: React.FC = () => {
             {loading ? (
                 <ActivityIndicator size="large" color="#0000ff" />
             ) : (
-                <View style={{ marginTop: 40 }}>
-                    <FlatList
-                        style={{ backgroundColor: "lightgray", borderRadius: 10 }}
-                        data={taskReport}
-                        keyExtractor={(item) => item.title}
-                        renderItem={({ item }) => (
-                            <View style={styles.reportItem}>
-                                <Text style={styles.title}>{item.title}</Text>
-                                <Text style={{ fontFamily: "MontserratRegular", marginTop: 10 }}>Assigned By: {item.assigned_by_name}</Text>
-                                <Text style={{ fontFamily: "MontserratRegular" }}>Status: {item.status}</Text>
-                                <Text style={{ fontFamily: "MontserratRegular" }}>Priority: {item.priority}</Text>
-                                <Text style={{ fontFamily: "MontserratRegular" }}>Start Date: {new Date(item.start_date).toLocaleDateString()}</Text>
-                                <Text style={{ fontFamily: "MontserratRegular" }}>Due Date: {new Date(item.due_date).toLocaleDateString()}</Text>
-                                <Text style={{ fontFamily: "MontserratRegular" }}>Assigned At: {new Date(item.assigned_at).toLocaleDateString()}</Text>
-                            </View>
-                        )}
-                    />
+                <View style={{ marginTop: 40, paddingBottom: 50 }}>
+                    {taskReport ? (<><ReportTasks taskReport={taskReport} /></>) : (<></>)}
                 </View>
             )}
         </ScrollView>
@@ -146,7 +132,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
-        paddingBottom: 80
+        // paddingBottom: 140
     },
     reportItem: {
         padding: 20,
