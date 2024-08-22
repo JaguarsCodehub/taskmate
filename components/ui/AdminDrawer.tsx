@@ -28,7 +28,7 @@ const drawerItems = [
     {
         label: 'Logout',
         icon: 'exit-to-app',
-        path: '/(main)/logout',
+        path: '/(admin)/logout',
         items: [],
     },
 ];
