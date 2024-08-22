@@ -4,7 +4,6 @@ import { useAuth } from '@/providers/AuthProvider';
 import { supabase } from '@/utils/supabase'; // Adjust the import as needed
 import { format, startOfToday, endOfToday } from 'date-fns';
 import { router } from 'expo-router';
-import { imagesData } from '@/constants/images';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import CustomDrawer from '@/components/ui/CustomDrawer';
 import FontAwesome from '@expo/vector-icons/FontAwesome';

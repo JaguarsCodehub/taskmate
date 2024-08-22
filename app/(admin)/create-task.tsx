@@ -3,6 +3,7 @@ import { View, Text, TextInput, Button, Alert, StyleSheet, Dimensions, Touchable
 import { supabase } from '@/utils/supabase';
 import { router } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Picker } from '@react-native-picker/picker';
 
 const { width, height } = Dimensions.get('window');
 
@@ -57,8 +58,17 @@ const CreateTaskScreen = () => {
                     </View>
 
                     <View style={styles.holder}>
-                        <Text style={{ fontSize: 18, fontFamily: "MontserratSemibold", color: "white" }}>Priority</Text>
-                        <TextInput placeholderTextColor={'#fff'} style={styles.textInput} value={priority} onChangeText={setPriority} placeholder='Enter Priority Level' />
+                        <Text style={{ fontSize: 20, fontFamily: "MontserratSemibold", color: "white" }}>Change Priority</Text>
+                        <Picker
+                            selectedValue={priority}
+                            style={styles.picker}
+                            onValueChange={(itemValue) => setPriority(itemValue)}
+                        >
+                            {/* <Picker.Item label='--Select Priority--' value='' /> */}
+                            <Picker.Item label='Low' value='low' />
+                            <Picker.Item label='Medium' value='medium' />
+                            <Picker.Item label='High' value='high' />
+                        </Picker>
                     </View>
                     <TouchableOpacity style={{ backgroundColor: "#40534C", padding: 10, marginTop: 20, borderRadius: 5 }}>
                         <Text style={{ fontSize: 18, fontFamily: "MontserratSemibold", color: "white", textAlign: "center" }}>Create Task</Text>
@@ -88,5 +98,14 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 5,
         marginTop: 10
-    }
+    },
+    picker: {
+        height: 50,
+        width: '100%',
+        marginBottom: 20,
+        backgroundColor: '#E2DAD6',
+        borderRadius: 60,
+        fontWeight: '700',
+        marginTop: 10
+    },
 })
