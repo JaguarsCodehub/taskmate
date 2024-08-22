@@ -192,16 +192,20 @@ const Main = () => {
                         />
                     </View>
                 </View>
-                <View style={styles.buttonContainer}>
+
+                <View style={{ backgroundColor: "#677D6A", padding: 15, borderRadius: 10 }}>
+                    <TouchableOpacity style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center" }} onPress={() => router.push('/(main)/assigned-dashboard')}>
+                        <Text style={{ fontSize: 20, fontFamily: "MontserratSemibold", color: "white" }}>Assigned Dashboard</Text>
+                        <View style={{ backgroundColor: "#FEFAE0", padding: 5, borderRadius: 20 }}>
+                            <Feather name="arrow-up-right" size={24} color="#000" />
+                        </View>
+                    </TouchableOpacity>
+                </View>
+                {/* <View style={styles.buttonContainer}>
                     <TouchableOpacity onPress={() => router.push('/(admin)')}>
                         <Text style={styles.buttonText}>Go to Admin</Text>
                     </TouchableOpacity>
-                </View>
-                <View style={styles.buttonContainer}>
-                    <TouchableOpacity onPress={() => router.push('/(main)/assigned-dashboard')}>
-                        <Text style={styles.buttonText}>User's Assigned Dashboard</Text>
-                    </TouchableOpacity>
-                </View>
+                </View> */}
             </View>
         </ScrollView>
     );
