@@ -90,14 +90,14 @@ const AssignedDashboardScreen = () => {
 
     const renderTaskItem = ({ item }: { item: any }) => (
         <View style={styles.itemContainer}>
-            <Text style={{ fontSize: 15, fontFamily: "MontserratMedium", color: "#93B1A6" }}>Task: {item.tasks.title}</Text>
-            <Text style={{ fontSize: 15, fontFamily: "MontserratMedium", color: "#93B1A6" }}>Assigned By: {item.assigned_by.full_name}</Text>
-            <Text style={{ fontSize: 15, fontFamily: "MontserratMedium", color: "#93B1A6" }}>Project: {item.projects.name}</Text>
-            <Text style={{ fontSize: 15, fontFamily: "MontserratMedium", color: "#93B1A6" }}>Client: {item.clients.name}</Text>
-            <Text style={{ fontSize: 15, fontFamily: "MontserratMedium", color: "#93B1A6" }}>Priority: {item.tasks.priority}</Text>
-            <Text style={{ fontSize: 15, fontFamily: "MontserratMedium", color: "#93B1A6" }}>Start Date: {formatDate(item.start_date)}</Text>
-            <Text style={{ fontSize: 15, fontFamily: "MontserratMedium", color: "#93B1A6" }}>Due Date: {formatDate(item.due_date)}</Text>
-            <Text style={{ fontSize: 15, fontFamily: "MontserratMedium", color: "#93B1A6" }}>Status: {item.tasks.status || 'Pending'}</Text>
+            <Text style={{ fontSize: 15, fontFamily: "MontserratMedium", color: "#FFF" }}>Task: {item.tasks.title}</Text>
+            <Text style={{ fontSize: 15, fontFamily: "MontserratMedium", color: "#FFF" }}>Assigned By: {item.assigned_by.full_name}</Text>
+            <Text style={{ fontSize: 15, fontFamily: "MontserratMedium", color: "#FFF" }}>Project: {item.projects.name}</Text>
+            <Text style={{ fontSize: 15, fontFamily: "MontserratMedium", color: "#FFF" }}>Client: {item.clients.name}</Text>
+            <Text style={{ fontSize: 15, fontFamily: "MontserratMedium", color: "#FFF" }}>Priority: {item.tasks.priority}</Text>
+            <Text style={{ fontSize: 15, fontFamily: "MontserratMedium", color: "#FFF" }}>Start Date: {formatDate(item.start_date)}</Text>
+            <Text style={{ fontSize: 15, fontFamily: "MontserratMedium", color: "#FFF" }}>Due Date: {formatDate(item.due_date)}</Text>
+            <Text style={{ fontSize: 15, fontFamily: "MontserratMedium", color: "#FFF" }}>Status: {item.tasks.status || 'Pending'}</Text>
             <TouchableOpacity
                 onPress={() => handleMarkAsComplete(item.tasks.id)}
                 style={styles.completeButton}
@@ -110,6 +110,7 @@ const AssignedDashboardScreen = () => {
     return (
         <View style={styles.container}>
             <Text style={styles.header}>Assigned Tasks</Text>
+            <Text style={{ fontFamily: "MontserratMedium", marginBottom: 20 }}>Filter out Tasks by priorities</Text>
             <View style={styles.priorityFilterContainer}>
                 <TouchableOpacity onPress={() => filterByPriority('low')} style={styles.filterButton}>
                     <Text>Low</Text>
@@ -146,7 +147,7 @@ const styles = StyleSheet.create({
     header: {
         fontSize: 24,
         fontFamily: "MontserratBold",
-        marginBottom: 16,
+        // marginBottom: 16,
     },
     priorityFilterContainer: {
         flexDirection: 'row',
@@ -159,7 +160,7 @@ const styles = StyleSheet.create({
         borderRadius: 4,
     },
     itemContainer: {
-        backgroundColor: "#183D3D",
+        backgroundColor: "#677D6A",
         padding: 16,
         borderBottomWidth: 1,
         borderBottomColor: '#ccc',
@@ -167,7 +168,7 @@ const styles = StyleSheet.create({
         borderRadius: 10
     },
     completeButton: {
-        backgroundColor: "#5C8374",
+        backgroundColor: "#9CA986",
         padding: 10,
         borderRadius: 5,
         marginTop: 10,
