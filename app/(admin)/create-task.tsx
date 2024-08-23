@@ -70,7 +70,7 @@ const CreateTaskScreen = () => {
                             <Picker.Item label='High' value='high' />
                         </Picker>
                     </View>
-                    <TouchableOpacity style={{ backgroundColor: "#40534C", padding: 10, marginTop: 20, borderRadius: 5 }}>
+                    <TouchableOpacity onPress={handleCreateTask} style={{ backgroundColor: "#40534C", padding: 10, marginTop: 20, borderRadius: 5 }}>
                         <Text style={{ fontSize: 18, fontFamily: "MontserratSemibold", color: "white", textAlign: "center" }}>Create Task</Text>
                     </TouchableOpacity>
                 </View>
