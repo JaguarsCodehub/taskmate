@@ -8,7 +8,7 @@
     - Delete Projects, Clients, Tasks as an Admin 
 - User:
     - Tasks filtered based on status ✅
-    - A Feature for Users to check their deadline tasks (A Date Referencing Feature)
+    - A Feature for Users to check their deadline tasks (A Date Referencing Feature) ✅
 ## Tasks Completed:
 
 ### Authentication

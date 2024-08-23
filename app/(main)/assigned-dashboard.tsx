@@ -4,6 +4,8 @@ import { Picker } from '@react-native-picker/picker';
 import { supabase } from '@/utils/supabase';
 import { useAuth } from '@/providers/AuthProvider';
 import { format } from 'date-fns';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
+import Feather from '@expo/vector-icons/Feather';
 
 const AssignedDashboardScreen = () => {
     const { user } = useAuth();
@@ -11,14 +13,15 @@ const AssignedDashboardScreen = () => {
     const [filteredTasks, setFilteredTasks] = useState<any[]>([]);
     const [selectedPriority, setSelectedPriority] = useState<string | null>(null);
     const [selectedStatus, setSelectedStatus] = useState<string>('all');
+    const [selectedDateFilter, setSelectedDateFilter] = useState<string>('all');
     const userId = user?.id;
 
     useEffect(() => {
         fetchAssignedTasks();
-    }, [selectedStatus, selectedPriority]);
+    }, [selectedStatus, selectedPriority, selectedDateFilter]);
 
     const fetchAssignedTasks = async () => {
-        const query = supabase
+        let query = supabase
             .from('task_assignments')
             .select(`
                 id, 
@@ -41,7 +44,24 @@ const AssignedDashboardScreen = () => {
             .eq('assigned_to', userId);
 
         if (selectedStatus !== 'all') {
-            query.eq('tasks.status', selectedStatus);
+            query = query.eq('tasks.status', selectedStatus);
+        }
+
+        if (selectedPriority && selectedPriority !== 'all') {
+            query = query.eq('tasks.priority', selectedPriority);
+        }
+
+        const today = new Date();
+        if (selectedDateFilter === 'next_7_days') {
+            const nextWeek = new Date();
+            nextWeek.setDate(today.getDate() + 7);
+            query = query.gte('due_date', today.toISOString()).lte('due_date', nextWeek.toISOString());
+        } else if (selectedDateFilter === 'next_14_days') {
+            const nextFortnight = new Date();
+            nextFortnight.setDate(today.getDate() + 14);
+            query = query.gte('due_date', today.toISOString()).lte('due_date', nextFortnight.toISOString());
+        } else if (selectedDateFilter === 'overdue') {
+            query = query.lt('due_date', today.toISOString());
         }
 
         const { data, error } = await query;
@@ -52,10 +72,6 @@ const AssignedDashboardScreen = () => {
             let tasksWithDetails = data.filter((task: any) =>
                 task.tasks && task.tasks.title && task.assigned_by.full_name && task.projects.name && task.clients.name
             );
-
-            if (selectedPriority && selectedPriority !== 'all') {
-                tasksWithDetails = tasksWithDetails.filter((task: any) => task.tasks.priority === selectedPriority);
-            }
 
             setTasks(tasksWithDetails);
             setFilteredTasks(tasksWithDetails);
@@ -110,6 +126,7 @@ const AssignedDashboardScreen = () => {
         </View>
     );
 
+
     return (
         <View style={styles.container}>
             <Text style={styles.header}>Assigned Tasks</Text>
@@ -143,10 +160,31 @@ const AssignedDashboardScreen = () => {
                 </Picker>
             </View>
 
+            <Text style={{ fontFamily: "MontserratMedium" }}>Filter Tasks by Due Date</Text>
+            <View style={styles.card}>
+                <Picker
+                    selectedValue={selectedDateFilter}
+                    onValueChange={(itemValue) => setSelectedDateFilter(itemValue)}
+                >
+                    <Picker.Item label="All" value="all" />
+                    <Picker.Item label="Next 7 Days" value="next_7_days" />
+                    <Picker.Item label="Next 14 Days" value="next_14_days" />
+                    <Picker.Item label="Overdue" value="overdue" />
+                </Picker>
+            </View>
+
 
             {filteredTasks.length === 0 && selectedStatus !== null && (
                 <Text>No tasks with the status {selectedStatus}</Text>
             )}
+            <View style={{ backgroundColor: "#5C8374", borderRadius: 5, display: "flex", flexDirection: "row", justifyContent: "space-between", padding: 5, alignItems: "center", marginBottom: 10 }}>
+                <Text style={{
+                    fontSize: 12,
+                    fontFamily: 'MontserratSemibold',
+                    color: "#fff"
+                }}>Here are your tasks filtered !</Text>
+                <Feather name="chevron-down" size={20} color="white" />
+            </View>
             <FlatList
                 data={filteredTasks}
                 keyExtractor={(item) => item.id.toString()}
@@ -168,7 +206,7 @@ const styles = StyleSheet.create({
         width: 314,
         borderColor: "rgba(155,155,155,1)",
         borderRadius: 10,
-        backgroundColor: "rgba(214,210,210)",
+        backgroundColor: "rgba(214,210,210,1)",
         marginTop: 10,
         marginLeft: 4,
         marginBottom: 10
@@ -201,5 +239,10 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         marginTop: 10,
         textDecorationLine: 'underline',
+    },
+    taskInfoText: {
+        fontSize: 15,
+        fontFamily: 'MontserratSemibold',
+        color: "#FF8343",
     },
 });
