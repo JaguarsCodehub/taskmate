@@ -8,7 +8,8 @@
 - Admin TODOS:
     - Dropdown for priorities ✅
     - Task Component UI ✅
-    - Individual report for each tasks
+    - Individual report for each tasks ✅
+    - Tweeks remaining
 ## Tasks Completed:
 
 ### Authentication
