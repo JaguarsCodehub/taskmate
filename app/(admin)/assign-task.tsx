@@ -220,6 +220,7 @@ const AssignTask = () => {
                                 mode="date"
                                 display="default"
                                 onChange={onDeadlineDateChange}
+                                minimumDate={new Date()}
                             />
                         )}
                     </View>
