@@ -4,6 +4,8 @@
 - Admin:
     - Date Range Feature for User's Report
     - A dropdown to fetch user's report by status
+    - Added Admin projects and clients adding Feature ✅
+    - Delete Projects, Clients, Tasks as an Admin 
 - User:
     - A Feature for Users to check their deadline tasks (A Date Referencing Feature)
 ## Tasks Completed:
