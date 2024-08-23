@@ -54,13 +54,32 @@ const AdminDashboard = () => {
                     </View>
                 </View>
 
-                <View style={{ paddingHorizontal: 20 }}>
-
-                </View>
 
                 <View style={{ paddingHorizontal: 20 }}>
-                    <TouchableOpacity onPress={() => router.push('/(admin)/create-task')}>
+                    <TouchableOpacity onPress={() => router.push('/(admin)/create-project')}>
+                        <View style={{ backgroundColor: "#040D12", padding: 10, borderRadius: 10, marginTop: 10 }}>
+                            <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+                                <Text style={{ fontSize: 20, fontFamily: "MontserratSemibold", color: "white" }}>Create Projects</Text>
+                                <View style={{ backgroundColor: "#F8EDED", padding: 2, width: 60, borderRadius: 10, alignItems: "center", justifyContent: "center" }}>
+                                    <Text style={{ fontSize: 10, fontFamily: "MontserratSemibold", color: "black", textAlign: "center" }}>projects</Text>
+                                </View>
+                            </View>
+                            <Text style={{ fontSize: 15, fontFamily: "MontserratRegular", color: "white" }}>Create new projects</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => router.push('/(admin)/create-client')}>
                         <View style={{ backgroundColor: "#1A3636", padding: 10, borderRadius: 10, marginTop: 10 }}>
+                            <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+                                <Text style={{ fontSize: 20, fontFamily: "MontserratSemibold", color: "white" }}>Create Clients</Text>
+                                <View style={{ backgroundColor: "#F8EDED", padding: 2, width: 60, borderRadius: 10, alignItems: "center", justifyContent: "center" }}>
+                                    <Text style={{ fontSize: 10, fontFamily: "MontserratSemibold", color: "black", textAlign: "center" }}>clients</Text>
+                                </View>
+                            </View>
+                            <Text style={{ fontSize: 15, fontFamily: "MontserratRegular", color: "white" }}>Create new clients</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => router.push('/(admin)/create-task')}>
+                        <View style={{ backgroundColor: "#40534C", padding: 10, borderRadius: 10, marginTop: 10 }}>
                             <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
                                 <Text style={{ fontSize: 20, fontFamily: "MontserratSemibold", color: "white" }}>Create Tasks</Text>
                                 <View style={{ backgroundColor: "#F8EDED", padding: 2, width: 60, borderRadius: 10, alignItems: "center", justifyContent: "center" }}>
@@ -71,7 +90,7 @@ const AdminDashboard = () => {
                         </View>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => router.push('/(admin)/assign-task')}>
-                        <View style={{ backgroundColor: "#40534C", padding: 10, borderRadius: 10, marginTop: 10 }}>
+                        <View style={{ backgroundColor: "#4f6051", padding: 10, borderRadius: 10, marginTop: 10 }}>
                             <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
                                 <Text style={{ fontSize: 20, fontFamily: "MontserratSemibold", color: "white" }}>Assign Tasks</Text>
                                 <View style={{ backgroundColor: "#F8EDED", padding: 2, width: 60, borderRadius: 10, alignItems: "center", justifyContent: "center" }}>
@@ -114,6 +133,7 @@ const AdminDashboard = () => {
                             <Text style={{ fontSize: 15, fontFamily: "MontserratRegular", color: "black" }}>Get details on User's Report</Text>
                         </View>
                     </TouchableOpacity>
+
                 </View>
 
             </View>
