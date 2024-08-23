@@ -1,15 +1,11 @@
 # Task Management Mobile Application
 
 ## TODOS:
-- Report of a specific user based on dates
-- User Interface Turnaround :
-    - User's report ✅
-    - Mark as Complete needs a validation of image
-- Admin TODOS:
-    - Dropdown for priorities ✅
-    - Task Component UI ✅
-    - Individual report for each tasks ✅
-    - Tweeks remaining
+- Admin:
+    - Date Range Feature for User's Report
+    - A dropdown to fetch user's report by status
+- User:
+    - A Feature for Users to check their deadline tasks (A Date Referencing Feature)
 ## Tasks Completed:
 
 ### Authentication
