@@ -55,7 +55,7 @@ const AdminDashboard = () => {
                 </View>
 
 
-                <View style={{ paddingHorizontal: 20 }}>
+                <View style={{ paddingHorizontal: 20, paddingBottom: 60 }}>
                     <TouchableOpacity onPress={() => router.push('/(admin)/create-project')}>
                         <View style={{ backgroundColor: "#040D12", padding: 10, borderRadius: 10, marginTop: 10 }}>
                             <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
@@ -133,11 +133,8 @@ const AdminDashboard = () => {
                             <Text style={{ fontSize: 15, fontFamily: "MontserratRegular", color: "black" }}>Get details on User's Report</Text>
                         </View>
                     </TouchableOpacity>
-
                 </View>
-
             </View>
-
         </ScrollView>
     )
 }
@@ -146,17 +143,18 @@ export default AdminDashboard
 
 const styles = StyleSheet.create({
     container: {
-        height: height,
+        minHeight: height,
         // alignItems: 'center',
         // justifyContent: 'center',
-        backgroundColor: 'orange',
+        // backgroundColor: 'orange',
+        paddingBottom: 40
     },
     background: {
         position: 'absolute',
         left: 0,
         right: 0,
         top: 0,
-        height: height,
+        minHeight: '100%',
     },
     drawerImage: {
         width: 30,

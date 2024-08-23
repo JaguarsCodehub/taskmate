@@ -151,7 +151,6 @@ const AssignedDashboardScreen = () => {
                 <Picker
                     selectedValue={selectedStatus}
                     onValueChange={(itemValue) => setSelectedStatus(itemValue)}
-
                 >
                     <Picker.Item label="All" value="all" />
                     <Picker.Item label="Pending" value="pending" />

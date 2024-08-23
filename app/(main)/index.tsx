@@ -55,7 +55,7 @@ const Main = () => {
 
             if (error) {
                 console.error('Error fetching today\'s tasks:', error);
-                Alert.alert('Error', 'Could not fetch today\'s tasks.');
+                // Alert.alert('Error', 'Could not fetch today\'s tasks.');
             } else {
                 setTodayTasks(data);
             }
