@@ -3,7 +3,6 @@ import React, { useRef, useState } from 'react';
 import { View, Text, StyleSheet, Animated, Dimensions, PanResponder, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { router } from 'expo-router'; // Import the router from expo-router
-import MenuIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 const { width, height } = Dimensions.get('window');
 const DRAWER_WIDTH = width * 0.7; // Adjust drawer width as needed
@@ -20,8 +19,8 @@ const drawerItems = [
         label: 'Tasks Report',
         icon: 'report',
         items: [
-            { label: 'Monthly Report', icon: 'insert-drive-file', path: '/complaint-register' },
-            { label: 'Yearly Report', icon: 'folder-shared', path: '/complaint-track' },
+            { label: 'Monthly Report', icon: 'insert-drive-file', path: '/(main)/assigned-dashboard' },
+            { label: 'Yearly Report', icon: 'folder-shared', path: '/(main)/assigned-dashboard' },
             // { label: 'Finished Complaint', icon: 'check', path: '/finished-complaint' },
         ],
     },
