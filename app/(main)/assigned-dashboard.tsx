@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, Alert } from 'react-native';
-import { supabase } from '@/utils/supabase'; // Adjust the import as needed
+import { Picker } from '@react-native-picker/picker';
+import { supabase } from '@/utils/supabase';
 import { useAuth } from '@/providers/AuthProvider';
 import { format } from 'date-fns';
 
@@ -9,45 +10,57 @@ const AssignedDashboardScreen = () => {
     const [tasks, setTasks] = useState<any[]>([]);
     const [filteredTasks, setFilteredTasks] = useState<any[]>([]);
     const [selectedPriority, setSelectedPriority] = useState<string | null>(null);
+    const [selectedStatus, setSelectedStatus] = useState<string>('all');
     const userId = user?.id;
 
     useEffect(() => {
-        const fetchAssignedTasks = async () => {
-            const { data, error } = await supabase
-                .from('task_assignments')
-                .select(`
-                    id, 
-                    start_date,
-                    due_date,
-                    tasks (
-                        id,
-                        title, 
-                        priority,
-                        status
-                    ),
-                    assigned_by (full_name),
-                    projects!fk_project_id (
-                        name
-                    ),
-                    clients (
-                        name
-                    )
-                `)
-                .eq('assigned_to', userId);
-
-            if (error) {
-                console.error(error);
-            } else {
-                const tasksWithDetails = data.filter((task: any) =>
-                    task.tasks.title && task.assigned_by.full_name && task.projects.name && task.clients.name
-                );
-                setTasks(tasksWithDetails);
-                setFilteredTasks(tasksWithDetails);
-            }
-        };
-
         fetchAssignedTasks();
-    }, [userId]);
+    }, [selectedStatus, selectedPriority]);
+
+    const fetchAssignedTasks = async () => {
+        const query = supabase
+            .from('task_assignments')
+            .select(`
+                id, 
+                start_date,
+                due_date,
+                tasks (
+                    id,
+                    title, 
+                    priority,
+                    status
+                ),
+                assigned_by (full_name),
+                projects!fk_project_id (
+                    name
+                ),
+                clients (
+                    name
+                )
+            `)
+            .eq('assigned_to', userId);
+
+        if (selectedStatus !== 'all') {
+            query.eq('tasks.status', selectedStatus);
+        }
+
+        const { data, error } = await query;
+
+        if (error) {
+            console.error(error);
+        } else {
+            let tasksWithDetails = data.filter((task: any) =>
+                task.tasks && task.tasks.title && task.assigned_by.full_name && task.projects.name && task.clients.name
+            );
+
+            if (selectedPriority && selectedPriority !== 'all') {
+                tasksWithDetails = tasksWithDetails.filter((task: any) => task.tasks.priority === selectedPriority);
+            }
+
+            setTasks(tasksWithDetails);
+            setFilteredTasks(tasksWithDetails);
+        }
+    };
 
     const formatDate = (dateString: string) => {
         const date = new Date(dateString);
@@ -63,7 +76,6 @@ const AssignedDashboardScreen = () => {
 
             if (error) throw error;
 
-            // Optionally, you might want to refetch the tasks after update
             setTasks((prevTasks) =>
                 prevTasks.map((task) =>
                     task.tasks.id === taskId
@@ -76,15 +88,6 @@ const AssignedDashboardScreen = () => {
         } catch (error: any) {
             Alert.alert('Error', error.message);
             console.error(error);
-        }
-    };
-
-    const filterByPriority = (priority: string) => {
-        setSelectedPriority(priority);
-        if (priority === 'all') {
-            setFilteredTasks(tasks);
-        } else {
-            setFilteredTasks(tasks.filter((task) => task.tasks.priority === priority));
         }
     };
 
@@ -112,21 +115,37 @@ const AssignedDashboardScreen = () => {
             <Text style={styles.header}>Assigned Tasks</Text>
             <Text style={{ fontFamily: "MontserratMedium", marginBottom: 20 }}>Filter out Tasks by priorities</Text>
             <View style={styles.priorityFilterContainer}>
-                <TouchableOpacity onPress={() => filterByPriority('low')} style={styles.filterButton}>
-                    <Text>Low</Text>
+                <TouchableOpacity onPress={() => setSelectedPriority('low')} style={styles.filterButton}>
+                    <Text style={{ fontFamily: "MontserratSemibold" }} >Low</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => filterByPriority('medium')} style={styles.filterButton}>
-                    <Text>Medium</Text>
+                <TouchableOpacity onPress={() => setSelectedPriority('medium')} style={styles.filterButton}>
+                    <Text style={{ fontFamily: "MontserratSemibold" }} >Medium</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => filterByPriority('high')} style={styles.filterButton}>
-                    <Text>High</Text>
+                <TouchableOpacity onPress={() => setSelectedPriority('high')} style={styles.filterButton}>
+                    <Text style={{ fontFamily: "MontserratSemibold" }} >High</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => filterByPriority('all')} style={styles.filterButton}>
-                    <Text>All</Text>
+                <TouchableOpacity onPress={() => setSelectedPriority('all')} style={styles.filterButton}>
+                    <Text style={{ fontFamily: "MontserratSemibold" }} >All</Text>
                 </TouchableOpacity>
             </View>
-            {filteredTasks.length === 0 && selectedPriority !== null && (
-                <Text>No tasks with the priority level {selectedPriority}</Text>
+
+            <Text style={{ fontFamily: "MontserratMedium" }}>Filter Tasks by Status</Text>
+            <View style={styles.card}>
+                <Picker
+                    selectedValue={selectedStatus}
+                    onValueChange={(itemValue) => setSelectedStatus(itemValue)}
+
+                >
+                    <Picker.Item label="All" value="all" />
+                    <Picker.Item label="Pending" value="pending" />
+                    <Picker.Item label="In Progress" value="in_progress" />
+                    <Picker.Item label="Completed" value="completed" />
+                </Picker>
+            </View>
+
+
+            {filteredTasks.length === 0 && selectedStatus !== null && (
+                <Text>No tasks with the status {selectedStatus}</Text>
             )}
             <FlatList
                 data={filteredTasks}
@@ -144,10 +163,19 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 16,
     },
+    card: {
+        borderWidth: 1,
+        width: 314,
+        borderColor: "rgba(155,155,155,1)",
+        borderRadius: 10,
+        backgroundColor: "rgba(214,210,210)",
+        marginTop: 10,
+        marginLeft: 4,
+        marginBottom: 10
+    },
     header: {
         fontSize: 24,
         fontFamily: "MontserratBold",
-        // marginBottom: 16,
     },
     priorityFilterContainer: {
         flexDirection: 'row',
