@@ -1,165 +1,300 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, ScrollView } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, Alert, ScrollView } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { supabase } from '@/utils/supabase';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import Ionicons from '@expo/vector-icons/Ionicons';
-import ReportTasks from '@/components/ui/ReportTasks';
+import { useAuth } from '@/providers/AuthProvider';
+import { format } from 'date-fns';
+import Feather from '@expo/vector-icons/Feather';
 
-interface User {
-    id: string;
-    full_name: string;
-}
-
-interface TaskReport {
-    title: string;
-    description: string;
-    priority: string;
-    status: string;
-    start_date: string;
-    due_date: string;
-    assigned_at: string;
-    assigned_by_name: string;
-}
-
-const UserReport: React.FC = () => {
-    const [users, setUsers] = useState<User[]>([]);
-    const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
-    const [taskReport, setTaskReport] = useState<TaskReport[]>([]);
-    const [loading, setLoading] = useState<boolean>(false);
+const AssignedDashboardScreen = () => {
+    const { user } = useAuth();
+    const [tasks, setTasks] = useState<any[]>([]);
+    const [filteredTasks, setFilteredTasks] = useState<any[]>([]);
+    const [selectedPriority, setSelectedPriority] = useState<string | null>(null);
+    const [selectedStatus, setSelectedStatus] = useState<string>('all');
+    const [selectedDateFilter, setSelectedDateFilter] = useState<string>('all');
+    const [users, setUsers] = useState<any[]>([]);
+    const [selectedUser, setSelectedUser] = useState<string | null>(user?.id || null);
 
     useEffect(() => {
-        const fetchUsers = async () => {
-            const { data, error } = await supabase.from('users').select('id, full_name');
-            if (error) {
-                console.error(error);
-                return;
-            }
-            setUsers(data);
-        };
-
         fetchUsers();
     }, []);
 
-    const fetchTaskReport = async (userId: string) => {
-        setLoading(true);
-        const { data, error } = await supabase
-            .from('tasks')
+    useEffect(() => {
+        fetchAssignedTasks();
+    }, [selectedStatus, selectedPriority, selectedDateFilter, selectedUser]);
+
+    const fetchUsers = async () => {
+        const { data, error } = await supabase.from('users').select('id, full_name');
+
+        if (error) {
+            console.error('Error fetching users:', error);
+        } else {
+            setUsers(data);
+        }
+    };
+
+    const fetchAssignedTasks = async () => {
+        if (!selectedUser) return;
+
+        let query = supabase
+            .from('task_assignments')
             .select(`
-        title,
-        description,
-        priority,
-        status,
-        task_assignments (
-          assigned_at,
-          start_date,
-          due_date,
-          users!task_assignments_assigned_by_fkey (full_name)
-        )
-      `)
-            .eq('task_assignments.assigned_to', userId);
+                id, 
+                start_date,
+                due_date,
+                tasks (
+                    id,
+                    title, 
+                    priority,
+                    status
+                ),
+                assigned_by (full_name),
+                projects!fk_project_id (
+                    name
+                ),
+                clients (
+                    name
+                )
+            `)
+            .eq('assigned_to', selectedUser);
+
+        if (selectedStatus !== 'all') {
+            query = query.eq('tasks.status', selectedStatus);
+        }
+
+        if (selectedPriority && selectedPriority !== 'all') {
+            query = query.eq('tasks.priority', selectedPriority);
+        }
+
+        const today = new Date();
+        if (selectedDateFilter === 'next_7_days') {
+            const nextWeek = new Date();
+            nextWeek.setDate(today.getDate() + 7);
+            query = query.gte('due_date', today.toISOString()).lte('due_date', nextWeek.toISOString());
+        } else if (selectedDateFilter === 'next_14_days') {
+            const nextFortnight = new Date();
+            nextFortnight.setDate(today.getDate() + 14);
+            query = query.gte('due_date', today.toISOString()).lte('due_date', nextFortnight.toISOString());
+        } else if (selectedDateFilter === 'overdue') {
+            query = query.lt('due_date', today.toISOString());
+        }
+
+        const { data, error } = await query;
 
         if (error) {
             console.error(error);
         } else {
-            const report = data.map((task: any) => ({
-                title: task.title,
-                description: task.description,
-                priority: task.priority,
-                status: task.status,
-                start_date: task.task_assignments[0]?.start_date,
-                due_date: task.task_assignments[0]?.due_date,
-                assigned_at: task.task_assignments[0]?.assigned_at,
-                assigned_by_name: task.task_assignments[0]?.users?.full_name || 'Unknown',
-            }));
-            setTaskReport(report);
+            let tasksWithDetails = data.filter((task: any) =>
+                task.tasks && task.tasks.title && task.assigned_by.full_name && task.projects.name && task.clients.name
+            );
+
+            setTasks(tasksWithDetails);
+            setFilteredTasks(tasksWithDetails);
         }
-        setLoading(false);
     };
 
+    const formatDate = (dateString: string) => {
+        const date = new Date(dateString);
+        return format(date, "d MMMM yyyy");
+    };
+
+    const handleMarkAsComplete = async (taskId: string) => {
+        try {
+            const { error } = await supabase
+                .from('tasks')
+                .update({ status: 'completed' })
+                .eq('id', taskId);
+
+            if (error) throw error;
+
+            setTasks((prevTasks) =>
+                prevTasks.map((task) =>
+                    task.tasks.id === taskId
+                        ? { ...task, tasks: { ...task.tasks, status: 'completed' } }
+                        : task
+                )
+            );
+
+            Alert.alert('Success', 'Task marked as completed');
+        } catch (error: any) {
+            Alert.alert('Error', error.message);
+            console.error(error);
+        }
+    };
+
+    const renderTaskItem = ({ item }: { item: any }) => (
+        <View style={styles.itemContainer}>
+            <Text style={{ fontSize: 15, fontFamily: "MontserratMedium", color: "#FFF" }}>Task: {item.tasks.title}</Text>
+            <Text style={{ fontSize: 15, fontFamily: "MontserratMedium", color: "#FFF" }}>Assigned By: {item.assigned_by.full_name}</Text>
+            <Text style={{ fontSize: 15, fontFamily: "MontserratMedium", color: "#FFF" }}>Project: {item.projects.name}</Text>
+            <Text style={{ fontSize: 15, fontFamily: "MontserratMedium", color: "#FFF" }}>Client: {item.clients.name}</Text>
+            <Text style={{ fontSize: 15, fontFamily: "MontserratMedium", color: "#FFF" }}>Priority: {item.tasks.priority}</Text>
+            <Text style={{ fontSize: 15, fontFamily: "MontserratMedium", color: "#FFF" }}>Start Date: {formatDate(item.start_date)}</Text>
+            <Text style={{ fontSize: 15, fontFamily: "MontserratMedium", color: "#FFF" }}>Due Date: {formatDate(item.due_date)}</Text>
+            <Text style={{ fontSize: 15, fontFamily: "MontserratMedium", color: "#FFF" }}>Status: {item.tasks.status || 'Pending'}</Text>
+            <TouchableOpacity
+                onPress={() => handleMarkAsComplete(item.tasks.id)}
+                style={styles.completeButton}
+            >
+                <Text style={{ fontSize: 15, fontFamily: "MontserratMedium", color: "white", alignItems: 'center', justifyContent: "center" }}>Mark as Complete ✔</Text>
+            </TouchableOpacity>
+        </View>
+    );
+
     return (
-        <ScrollView style={styles.container}>
-            <Text style={{ fontSize: 25, fontFamily: "MontserratSemibold" }}>
-                Get User's Report
-            </Text>
-            <View style={{ marginTop: 20 }}>
-                <Text style={{ fontFamily: "MontserratMedium" }}>You need to select a User to get his report</Text>
-                <Picker
-                    style={styles.picker}
-                    selectedValue={selectedUserId}
-                    onValueChange={(itemValue) => {
-                        setSelectedUserId(itemValue);
-                        if (itemValue) {
-                            fetchTaskReport(itemValue);
-                        }
-                    }}>
-                    <Picker.Item label="Select a User" value={null} style={{ fontFamily: "MontserratSemibold" }} />
-                    {users.map((user) => (
-                        <Picker.Item key={user.id} label={user.full_name} value={user.id} style={{ fontFamily: "MontserratSemibold" }} />
-                    ))}
-                </Picker>
-            </View>
+        <ScrollView>
+            <View style={styles.container}>
+                <Text style={styles.header}>Get User Reports</Text>
 
-            {!selectedUserId ? (
-                <>
-                    <View style={{ backgroundColor: "#ffc3c3", borderRadius: 5, display: "flex", flexDirection: "row", justifyContent: "space-between", padding: 10 }}>
-                        <Text style={styles.taskInfoText}>Select A User Id First</Text>
-                        <FontAwesome name="exclamation-triangle" size={24} color="#ff4343" />
-                    </View>
-                </>) : (
-                <>
-                    <View style={{ backgroundColor: "#00a558", borderRadius: 5, display: "flex", flexDirection: "row", justifyContent: "space-between", padding: 10 }}>
-                        <Text style={styles.checkInfoText}>Check User's Report</Text>
-                        <Ionicons name="checkmark-done-circle" size={24} color="#43ffa4" />
-                    </View>
-                </>
-            )}
-
-            {loading ? (
-                <ActivityIndicator size="large" color="#0000ff" />
-            ) : (
-                <View style={{ marginTop: 40, paddingBottom: 50 }}>
-                    {taskReport ? (<><ReportTasks taskReport={taskReport} /></>) : (<></>)}
+                {/* User Picker */}
+                <Text style={{ fontFamily: "MontserratMedium", marginBottom: 10 }}>Select User</Text>
+                <View style={styles.card}>
+                    <Picker
+                        selectedValue={selectedUser}
+                        onValueChange={(itemValue) => setSelectedUser(itemValue)}
+                    >
+                        <Picker.Item label="Select a value" value="" />
+                        {users.map((user) => (
+                            <Picker.Item key={user.id} label={user.full_name} value={user.id} />
+                        ))}
+                    </Picker>
                 </View>
-            )}
+
+                {/* Priority Filter */}
+                <Text style={{ fontFamily: "MontserratMedium", marginBottom: 20 }}>Filter out Tasks by priorities</Text>
+                <View style={styles.priorityFilterContainer}>
+                    <TouchableOpacity onPress={() => setSelectedPriority('low')} style={styles.filterButton}>
+                        <Text style={{ fontFamily: "MontserratSemibold" }}>Low</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => setSelectedPriority('medium')} style={styles.filterButton}>
+                        <Text style={{ fontFamily: "MontserratSemibold" }}>Medium</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => setSelectedPriority('high')} style={styles.filterButton}>
+                        <Text style={{ fontFamily: "MontserratSemibold" }}>High</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => setSelectedPriority('all')} style={styles.filterButton}>
+                        <Text style={{ fontFamily: "MontserratSemibold" }}>All</Text>
+                    </TouchableOpacity>
+                </View>
+
+                {/* Status Filter */}
+                <Text style={{ fontFamily: "MontserratMedium" }}>Filter Tasks by Status</Text>
+                <View style={styles.card}>
+                    <Picker
+                        selectedValue={selectedStatus}
+                        onValueChange={(itemValue) => setSelectedStatus(itemValue)}
+                    >
+                        <Picker.Item label="All" value="all" />
+                        <Picker.Item label="Pending" value="pending" />
+                        <Picker.Item label="In Progress" value="in_progress" />
+                        <Picker.Item label="Completed" value="completed" />
+                    </Picker>
+                </View>
+
+                {/* Date Filter */}
+                <Text style={{ fontFamily: "MontserratMedium" }}>Filter Tasks by Due Date</Text>
+                <View style={styles.card}>
+                    <Picker
+                        selectedValue={selectedDateFilter}
+                        onValueChange={(itemValue) => setSelectedDateFilter(itemValue)}
+                    >
+                        <Picker.Item label="All" value="all" />
+                        <Picker.Item label="Next 7 Days" value="next_7_days" />
+                        <Picker.Item label="Next 14 Days" value="next_14_days" />
+                        <Picker.Item label="Overdue" value="overdue" />
+                    </Picker>
+                </View>
+
+                {filteredTasks.length === 0 && selectedStatus !== null && (
+                    <Text>No tasks with the status {selectedStatus}</Text>
+                )}
+
+                <View style={styles.taskListHeader}>
+                    <Text style={styles.taskListHeaderText}>Here are your tasks filtered!</Text>
+                    <Feather name="chevron-down" size={20} color="white" />
+                </View>
+
+                <FlatList
+                    data={filteredTasks}
+                    keyExtractor={(item) => item.id.toString()}
+                    renderItem={renderTaskItem}
+                />
+            </View>
         </ScrollView>
     );
 };
-
-export default UserReport;
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
-        // paddingBottom: 140
+        backgroundColor: '#282c34', // Dark background for better contrast
     },
-    reportItem: {
-        padding: 20,
-        borderBottomWidth: 1,
-        borderBottomColor: '#ececec',
-    },
-    title: {
-        fontSize: 18,
-        fontFamily: "MontserratSemibold"
-    },
-    picker: {
-        height: 50,
-        width: '100%',
+    header: {
+        fontSize: 24,
+        fontFamily: 'MontserratSemibold',
+        color: '#FFF',
         marginBottom: 20,
-        backgroundColor: '#E2DAD6',
-        borderRadius: 60,
-        fontWeight: '700',
-        marginTop: 10
+        textAlign: 'center',
     },
-    taskInfoText: {
-        fontSize: 15,
-        fontFamily: 'MontserratSemibold',
-        color: "#ff4343",
+    card: {
+        backgroundColor: '#3a3f47', // Dark card background
+        borderRadius: 10,
+        padding: 10,
+        marginBottom: 20,
     },
-    checkInfoText: {
-        fontSize: 15,
+    priorityFilterContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 20,
+    },
+    filterButton: {
+        flex: 1,
+        padding: 10,
+        backgroundColor: '#3a3f47',
+        borderRadius: 5,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginHorizontal: 5,
+    },
+    filterButtonText: {
         fontFamily: 'MontserratSemibold',
-        color: "#43ffa4",
-    }
+        color: '#FFF',
+    },
+    taskListHeader: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginBottom: 10,
+        paddingBottom: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: '#3a3f47',
+    },
+    taskListHeaderText: {
+        fontSize: 18,
+        fontFamily: 'MontserratMedium',
+        color: '#FFF',
+    },
+    itemContainer: {
+        backgroundColor: '#3a3f47',
+        borderRadius: 10,
+        padding: 15,
+        marginBottom: 15,
+    },
+    completeButton: {
+        marginTop: 10,
+        padding: 10,
+        backgroundColor: '#4CAF50', // Green for completion button
+        borderRadius: 5,
+        alignItems: 'center',
+    },
+    completeButtonText: {
+        fontFamily: 'MontserratSemibold',
+        color: '#FFF',
+        textAlign: 'center',
+    },
 });
+
+
+export default AssignedDashboardScreen;
