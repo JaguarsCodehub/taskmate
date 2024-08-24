@@ -165,21 +165,21 @@ const AssignedDashboardScreen = () => {
                 <Text style={{ fontFamily: "MontserratMedium", marginBottom: 20 }}>Filter out Tasks by priorities</Text>
                 <View style={styles.priorityFilterContainer}>
                     <TouchableOpacity onPress={() => setSelectedPriority('low')} style={styles.filterButton}>
-                        <Text style={{ fontFamily: "MontserratSemibold" }}>Low</Text>
+                        <Text style={{ fontFamily: "MontserratSemibold", color: "white" }}>Low</Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => setSelectedPriority('medium')} style={styles.filterButton}>
-                        <Text style={{ fontFamily: "MontserratSemibold" }}>Medium</Text>
+                        <Text style={{ fontFamily: "MontserratSemibold", color: "white" }}>Medium</Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => setSelectedPriority('high')} style={styles.filterButton}>
-                        <Text style={{ fontFamily: "MontserratSemibold" }}>High</Text>
+                        <Text style={{ fontFamily: "MontserratSemibold", color: "white" }}>High</Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => setSelectedPriority('all')} style={styles.filterButton}>
-                        <Text style={{ fontFamily: "MontserratSemibold" }}>All</Text>
+                        <Text style={{ fontFamily: "MontserratSemibold", color: "white" }}>All</Text>
                     </TouchableOpacity>
                 </View>
 
                 {/* Status Filter */}
-                <Text style={{ fontFamily: "MontserratMedium" }}>Filter Tasks by Status</Text>
+                <Text style={{ fontFamily: "MontserratMedium", marginBottom: 10 }}>Filter Tasks by Status</Text>
                 <View style={styles.card}>
                     <Picker
                         selectedValue={selectedStatus}
@@ -193,7 +193,7 @@ const AssignedDashboardScreen = () => {
                 </View>
 
                 {/* Date Filter */}
-                <Text style={{ fontFamily: "MontserratMedium" }}>Filter Tasks by Due Date</Text>
+                <Text style={{ fontFamily: "MontserratMedium", marginBottom: 10 }}>Filter Tasks by Due Date</Text>
                 <View style={styles.card}>
                     <Picker
                         selectedValue={selectedDateFilter}
@@ -212,7 +212,7 @@ const AssignedDashboardScreen = () => {
 
                 <View style={styles.taskListHeader}>
                     <Text style={styles.taskListHeaderText}>Here are your tasks filtered!</Text>
-                    <Feather name="chevron-down" size={20} color="white" />
+                    <Feather name="chevron-down" size={20} color="black" />
                 </View>
 
                 <FlatList
@@ -229,19 +229,19 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
-        backgroundColor: '#282c34', // Dark background for better contrast
+        backgroundColor: '#ececec', // Dark background for better contrast
     },
     header: {
         fontSize: 24,
         fontFamily: 'MontserratSemibold',
-        color: '#FFF',
+        color: '#000',
         marginBottom: 20,
-        textAlign: 'center',
+        // textAlign: 'center',
     },
     card: {
-        backgroundColor: '#3a3f47', // Dark card background
+        backgroundColor: 'lightgray', // Dark card background
         borderRadius: 10,
-        padding: 10,
+        padding: 2,
         marginBottom: 20,
     },
     priorityFilterContainer: {
@@ -251,12 +251,12 @@ const styles = StyleSheet.create({
     },
     filterButton: {
         flex: 1,
-        padding: 10,
-        backgroundColor: '#3a3f47',
+        padding: 5,
+        backgroundColor: '#503C3C',
         borderRadius: 5,
         alignItems: 'center',
         justifyContent: 'center',
-        marginHorizontal: 5,
+        marginLeft: 5
     },
     filterButtonText: {
         fontFamily: 'MontserratSemibold',
@@ -272,12 +272,12 @@ const styles = StyleSheet.create({
         borderBottomColor: '#3a3f47',
     },
     taskListHeaderText: {
-        fontSize: 18,
+        fontSize: 15,
         fontFamily: 'MontserratMedium',
-        color: '#FFF',
+        color: '#000',
     },
     itemContainer: {
-        backgroundColor: '#3a3f47',
+        backgroundColor: '#40534C',
         borderRadius: 10,
         padding: 15,
         marginBottom: 15,
@@ -285,7 +285,7 @@ const styles = StyleSheet.create({
     completeButton: {
         marginTop: 10,
         padding: 10,
-        backgroundColor: '#4CAF50', // Green for completion button
+        backgroundColor: '#677D6A', // Green for completion button
         borderRadius: 5,
         alignItems: 'center',
     },
