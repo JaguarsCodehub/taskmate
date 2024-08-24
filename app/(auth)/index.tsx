@@ -44,10 +44,11 @@ export default function Auth() {
 
         // Navigate to the appropriate screen based on role
         if (data?.role === 'admin') {
-            console.log(data.role)
+            // console.log(data.role)
             router.push('/(admin)')
+        } if (data.role === "manager") {
+            router.push('/(manager)')
         } else {
-            console.log(data.role)
             router.push('/(main)')
         }
 
@@ -83,7 +84,7 @@ export default function Auth() {
                     onChangeText={(text) => setEmail(text)}
                     value={email}
                     placeholder="Enter your Email Address"
-                    placeholderClassName='text-white'
+                    // placeholderClassName='text-white'
                     placeholderTextColor={'white'}
                     autoCapitalize={'none'}
                     style={{ borderWidth: 2, borderColor: "white", padding: 5, borderRadius: 10 }}
@@ -95,7 +96,7 @@ export default function Auth() {
                     value={password}
                     secureTextEntry={true}
                     placeholder="Enter your Password"
-                    placeholderClassName='text-white'
+                    // placeholderClassName='text-white'
                     placeholderTextColor={'white'}
                     style={{ borderWidth: 2, borderColor: "white", padding: 5, borderRadius: 10 }}
                     autoCapitalize={'none'}

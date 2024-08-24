@@ -1,7 +1,7 @@
 import { useFonts } from 'expo-font';
 import { router, Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import 'react-native-reanimated';
 
 import AuthProvider, { useAuth } from '@/providers/AuthProvider';
@@ -10,7 +10,6 @@ import AuthProvider, { useAuth } from '@/providers/AuthProvider';
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  // const colorScheme = useColorScheme();
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
     MontserratBold: require('../assets/fonts/Montserrat-Bold.ttf'),
@@ -19,8 +18,7 @@ export default function RootLayout() {
     MontserratSemibold: require('../assets/fonts/Montserrat-SemiBold.ttf')
   });
 
-  const { user } = useAuth();
-  console.log("Email:", user?.id)
+  const { user, role } = useAuth();
 
   useEffect(() => {
     if (loaded) {
@@ -28,10 +26,27 @@ export default function RootLayout() {
     }
   }, [loaded]);
 
+  useEffect(() => {
+    if (role) {
+      switch (role) {
+        // case 'user':
+        //   router.push('/(main)');
+        //   break;
+        case 'admin':
+          router.push('/(admin)');
+          break;
+        case 'manager':
+          router.push('/(manager)');
+          break;
+        default:
+          console.error('Unknown role');
+      }
+    }
+  }, [role]);
+
   if (!loaded) {
     return null;
   }
-
 
   return (
     <AuthProvider>

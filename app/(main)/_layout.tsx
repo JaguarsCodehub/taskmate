@@ -27,11 +27,8 @@ export default function RootLayout() {
 
             // Navigate to the appropriate screen based on role
             if (data?.role === 'admin') {
-                console.log(data.role)
+                // console.log(data.role)
                 router.push('/(admin)')
-            } else {
-                console.log(data.role)
-                router.push('/(main)')
             }
         }
         fetchAdmin()
