@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, FlatList, Alert, ScrollView, Touchable } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, FlatList, ScrollView } from 'react-native';
 import { useAuth } from '@/providers/AuthProvider';
-import { supabase } from '@/utils/supabase'; // Adjust the import as needed
+import { supabase } from '@/utils/supabase';
 import { format, startOfToday, endOfToday } from 'date-fns';
 import { router } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -12,7 +12,7 @@ import Feather from '@expo/vector-icons/Feather';
 const Main = () => {
     const { user } = useAuth();
     const [todayTasks, setTodayTasks] = useState<any[]>([]);
-    const userId = user?.id; // Get this from your user context/auth state
+    const userId = user?.id;
 
     const [isDrawerOpen, setDrawerOpen] = useState(false);
 
@@ -51,58 +51,62 @@ const Main = () => {
                 `)
                 .eq('assigned_to', userId)
                 .gte('start_date', todayStart)
-                .lte('start_date', todayEnd); // Check if `due_date` should be used as well
+                .lte('start_date', todayEnd);
 
             if (error) {
                 console.error('Error fetching today\'s tasks:', error);
-                // Alert.alert('Error', 'Could not fetch today\'s tasks.');
             } else {
                 setTodayTasks(data);
             }
         };
 
         fetchTodayTasks();
-    }, [userId, todayTasks]);
+    }, [userId]);
 
     const formatDate = (dateString: string) => {
         const date = new Date(dateString);
         return format(date, 'd MMMM');
     };
 
+    const getPriorityColor = (priority: string) => {
+        switch (priority) {
+            case 'high':
+                return '#FF4C4C'; // Red for high priority
+            case 'medium':
+                return '#FFC107'; // Yellow for medium priority
+            case 'low':
+                return '#4CAF50'; // Green for low priority
+            default:
+                return '#9E9E9E'; // Grey for undefined or unknown priority
+        }
+    };
+
     const renderTaskItem = ({ item }: { item: any }) => (
-        <View style={{
-            backgroundColor: "#9CA986",
-            padding: 20,
-            borderBottomWidth: 1,
-            borderBottomColor: '#ccc',
-            marginBottom: 10,
-            borderRadius: 10,
-            marginTop: 10
-        }}>
-            <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
-                <View style={{ backgroundColor: "#FEFAE0", padding: 5, width: '30%', borderRadius: 25, alignItems: "center" }}>
-                    <Text style={{ fontSize: 12, fontFamily: "MontserratMedium" }}>{item.start_date ? formatDate(item.start_date) : 'No start date'}</Text>
+        <View style={styles.itemContainer}>
+            <View style={styles.itemHeader}>
+                <View style={styles.dateAndPriority}>
+                    <View style={styles.dateContainer}>
+                        <Text style={styles.dateText}>{item.start_date ? formatDate(item.start_date) : 'No start date'}</Text>
+                    </View>
+                    <View style={[styles.priorityCircle, { backgroundColor: getPriorityColor(item.tasks.priority) }]} />
                 </View>
-                <View style={{ alignItems: "center" }}>
-                    {/* <Text style={{ fontSize: 12, fontFamily: "MontserratMedium" }}>{item.tasks?.priority || 'No priority'}</Text> */}
-                    <Image source={{ uri: item.assigned_by?.avatar_url }} style={styles.avatarAdmin} />
-                </View>
+                <Image source={{ uri: item.assigned_by?.avatar_url }} style={styles.avatarAdmin} />
             </View>
-            <View style={{ marginTop: 20 }}>
-                <Text style={{ fontSize: 20, fontFamily: "MontserratBold", color: "#FEFAE0" }}>{item.tasks?.title || 'No title'}</Text>
-                <Text style={{ fontSize: 16, fontFamily: "MontserratSemibold", color: "#FEFAE0" }}>{item.tasks?.description || 'No description'}</Text>
-                <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", marginTop: 20 }}>
-                    <View style={{ display: "flex", flexDirection: "row" }}>
-                        <View style={{ backgroundColor: "#FFF", padding: 5, paddingHorizontal: 10, borderRadius: 20, alignItems: "center", marginRight: 10 }}>
-                            <Text style={{ fontSize: 14, fontFamily: "MontserratMedium", color: "#000", textAlign: "center" }}>Today</Text>
+            <View style={styles.taskDetails}>
+                <Text style={styles.taskTitle}>{item.tasks?.title || 'No title'}</Text>
+                <Text style={styles.taskDescription}>{item.tasks?.description || 'No description'}</Text>
+                <View style={styles.taskFooter}>
+                    <View style={styles.taskFooterTextContainer}>
+                        <View style={styles.footerLabel}>
+                            <Text style={styles.footerLabelText}>Today</Text>
                         </View>
-                        <View style={{ backgroundColor: "#FFF", paddingVertical: 5, paddingHorizontal: 10, borderRadius: 20, alignItems: "center" }}>
-                            <Text style={{ fontSize: 14, fontFamily: "MontserratMedium", color: "#000" }}>{item.tasks.priority || 'No priority'}</Text>
+                        <View style={styles.footerLabel}>
+                            <Text style={styles.footerLabelText}>{item.tasks.priority || 'No priority'}</Text>
                         </View>
                     </View>
                     <TouchableOpacity>
-                        <View style={{ backgroundColor: "#FEFAE0", padding: 5, borderRadius: 20 }}>
-                            <Feather name="arrow-up-right" size={24} color="#000" />
+                        <View style={styles.arrowButton}>
+                            <Feather name="arrow-up-right" size={24} color="#FFF" />
                         </View>
                     </TouchableOpacity>
                 </View>
@@ -110,23 +114,15 @@ const Main = () => {
         </View>
     );
 
-    const renderPriority = ({ item }: { item: any }) => (
-        <>
-            <View key={item.id} style={{ backgroundColor: "#677D6A", padding: 5, borderRadius: 10, marginTop: 10, marginLeft: 5 }}>
-                <Text style={{ color: "white", fontFamily: "MontserratSemibold" }}>{item.tasks.priority}</Text>
-            </View>
-        </>
-    );
-
     return (
         <ScrollView>
             <CustomDrawer isOpen={isDrawerOpen} closeDrawer={closeDrawer} />
-            <View style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-                <View style={{ padding: 20, display: "flex", flexDirection: "row" }}>
+            <View style={styles.headerRow}>
+                <View style={styles.headerLeft}>
                     <Image source={require("@/assets/images/swift.png")} style={styles.logoImage} />
-                    <Text style={{ fontSize: 20, fontWeight: "600", marginLeft: 10, fontFamily: "MontserratMedium" }}>TaskMate</Text>
+                    <Text style={styles.headerText}>Rangshalakaa</Text>
                 </View>
-                <View style={{ display: "flex", flexDirection: "row" }}>
+                <View style={styles.headerRight}>
                     <TouchableOpacity onPress={() => router.push('/(main)/profile')}>
                         <Image source={require("@/assets/images/avatar2.jpg")} style={styles.profileImage} />
                     </TouchableOpacity>
@@ -135,87 +131,78 @@ const Main = () => {
                     </TouchableOpacity>
                 </View>
             </View>
-            <View style={{ padding: 20 }}>
-                <Text style={styles.header}>Start your Day & Be Productive ✌</Text>
-                <View style={{ backgroundColor: "#40534C", padding: 10, borderRadius: 10, marginTop: 10 }}>
-                    <View style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+            <View style={styles.content}>
+                <Text style={styles.mainHeader}>Start your Day & Be Productive ✌</Text>
+                <View style={styles.calendarContainer}>
+                    <View style={styles.calendarHeader}>
                         <Ionicons name="calendar" size={24} color="#fff" />
-                        <Text style={{ fontSize: 15, fontFamily: "MontserratSemibold", marginLeft: 10, color: "#fff" }}>{formatDate(Date())}</Text>
+                        <Text style={styles.calendarText}>{formatDate(Date())}</Text>
                     </View>
-                    <View style={{ marginTop: 20 }}>
-                        <Text style={{ fontSize: 15, fontFamily: "MontserratMedium", color: "#93B1A6" }}>Current tasks</Text>
-                        <Text style={{ fontSize: 20, fontFamily: "MontserratSemibold", color: "#fff" }}>You have {todayTasks.length} task{todayTasks.length > 1 ? "s" : ""} for today</Text>
-                        <View style={{ marginTop: 10, borderColor: "#93B1A6", borderWidth: 0.2 }} />
-                        <View style={{ marginTop: 5, display: "flex", flexDirection: "row" }}>
-                            <FlatList
-                                data={todayTasks}
-                                keyExtractor={(item) => item.id.toString()}
-                                renderItem={renderPriority}
-                                horizontal
-                            />
-                        </View>
+                    <View style={styles.taskSummary}>
+                        <Text style={styles.summaryText}>Current tasks</Text>
+                        <Text style={styles.summaryCount}>You have {todayTasks.length} task{todayTasks.length > 1 ? "s" : ""} for today</Text>
+                        <View style={styles.separator} />
+                        <FlatList
+                            data={todayTasks}
+                            keyExtractor={(item) => item.id.toString()}
+                            renderItem={renderTaskItem}
+                            horizontal
+                        />
                     </View>
                 </View>
                 <View style={styles.taskInfoContainer}>
                     {todayTasks.length > 2 ? (
-                        <>
-                            <View style={{ backgroundColor: "#ffdac3", borderRadius: 5, display: "flex", flexDirection: "row", justifyContent: "space-between", padding: 10 }}>
-                                <Text style={styles.taskInfoText}>You have a lot of tasks pending.</Text>
-                                <FontAwesome name="exclamation-triangle" size={24} color="#FF8343" />
-                            </View>
-                        </>
+                        <View style={styles.warningContainer}>
+                            <Text style={styles.taskInfoText}>You have a lot of tasks pending.</Text>
+                            <FontAwesome name="exclamation-triangle" size={24} color="#FF8343" />
+                        </View>
                     ) : (
-                        <>
-                            <View style={{ backgroundColor: "#677D6A", borderRadius: 5, display: "flex", flexDirection: "row", justifyContent: "space-between", padding: 5, alignItems: "center" }}>
-                                <Text style={{
-                                    fontSize: 12,
-                                    fontFamily: 'MontserratSemibold',
-                                    color: "#fff"
-                                }}>Complete the below remaining tasks.</Text>
-                                {/* <Feather name="chevron-down" size={20} color="white " />  */}
-                            </View>
-                        </>
+                        <View style={styles.completeContainer}>
+                            <Text style={styles.completeText}>Complete the below remaining tasks.</Text>
+                        </View>
                     )}
                 </View>
-                <View style={{ marginTop: 10 }}>
+                <View style={styles.tasksContainer}>
                     <View style={styles.headerContainer}>
                         <Text style={styles.headerTitle}>Today's Task</Text>
                         <TouchableOpacity onPress={() => router.push("/(main)/assigned-dashboard")}>
                             <Text style={styles.headerSubtitle}>See all</Text>
                         </TouchableOpacity>
                     </View>
-                    <View>
-                        <FlatList
-                            data={todayTasks}
-                            keyExtractor={(item) => item.id.toString()}
-                            renderItem={renderTaskItem}
-                        />
-                    </View>
+                    <FlatList
+                        data={todayTasks}
+                        keyExtractor={(item) => item.id.toString()}
+                        renderItem={renderTaskItem}
+                    />
                 </View>
-
-                <View style={{ backgroundColor: "#677D6A", padding: 15, borderRadius: 10 }}>
-                    <TouchableOpacity style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center" }} onPress={() => router.push('/(main)/assigned-dashboard')}>
-                        <Text style={{ fontSize: 20, fontFamily: "MontserratSemibold", color: "white" }}>Assigned Dashboard</Text>
-                        <View style={{ backgroundColor: "#FEFAE0", padding: 5, borderRadius: 20 }}>
+                <View style={styles.dashboardButtonContainer}>
+                    <TouchableOpacity onPress={() => router.push('/(main)/assigned-dashboard')} style={styles.dashboardButton}>
+                        <Text style={styles.dashboardButtonText}>Assigned Dashboard</Text>
+                        <View style={styles.arrowButton}>
                             <Feather name="arrow-up-right" size={24} color="#000" />
                         </View>
                     </TouchableOpacity>
                 </View>
-                {/* <View style={styles.buttonContainer}>
-                    <TouchableOpacity onPress={() => router.push('/(admin)')}>
-                        <Text style={styles.buttonText}>Go to Admin</Text>
-                    </TouchableOpacity>
-                </View> */}
             </View>
         </ScrollView>
     );
 };
 
 const styles = StyleSheet.create({
-    header: {
-        fontSize: 25,
-        fontFamily: 'MontserratSemibold',
-        color: '#1A3636',
+    headerRow: {
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+    },
+    headerLeft: {
+        padding: 20,
+        display: "flex",
+        flexDirection: "row",
+    },
+    headerRight: {
+        display: "flex",
+        flexDirection: "row",
     },
     logoImage: {
         width: 25,
@@ -232,79 +219,200 @@ const styles = StyleSheet.create({
         borderRadius: 25,
         marginRight: 10
     },
-    avatarAdmin: {
-        width: 25,
-        height: 25,
-        borderRadius: 25
-    },
-    avatarContainer: {
-        display: 'flex',
-        flexDirection: 'row',
-        marginTop: 20,
-        backgroundColor: 'lightgray',
-        paddingVertical: 20,
-        borderRadius: 10,
-    },
-    avatarImage: {
-        width: 50,
-        height: 50,
-        borderRadius: 25,
-        marginLeft: 10,
-    },
-    moreTasksContainer: {
-        backgroundColor: 'black',
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: 25,
-        padding: 8,
-        marginLeft: 5,
-    },
-    moreTasksText: {
+    headerText: {
         fontSize: 20,
+        fontWeight: "600",
+        marginLeft: 10,
+        fontFamily: "MontserratMedium",
+    },
+    content: {
+        padding: 20,
+    },
+    mainHeader: {
+        fontSize: 25,
         fontFamily: 'MontserratSemibold',
-        color: 'white',
+        color: '#1A3636',
+    },
+    calendarContainer: {
+        backgroundColor: "#40534C",
+        padding: 10,
+        borderRadius: 10,
+        marginTop: 10,
+    },
+    calendarHeader: {
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+    },
+    calendarText: {
+        fontSize: 15,
+        fontFamily: "MontserratSemibold",
+        marginLeft: 10,
+        color: "#fff",
+    },
+    taskSummary: {
+        marginTop: 20,
+    },
+    summaryText: {
+        fontSize: 15,
+        fontFamily: "MontserratSemibold",
+        color: "#fff",
+    },
+    summaryCount: {
+        fontSize: 12,
+        color: "#fff",
+    },
+    separator: {
+        height: 1,
+        backgroundColor: "#D9D9D9",
+        marginVertical: 10,
     },
     taskInfoContainer: {
-        // paddingHorizontal: 20,
-        marginTop: 10,
+        display: "flex",
+        alignItems: "center",
+        marginTop: 15
+    },
+    warningContainer: {
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        backgroundColor: "#FFF1E8",
+        padding: 10,
+        borderRadius: 20,
     },
     taskInfoText: {
         fontSize: 15,
-        fontFamily: 'MontserratSemibold',
         color: "#FF8343",
+        marginRight: 10,
+        fontFamily: "MontserratMedium"
+    },
+    completeContainer: {
+        backgroundColor: "#40534C",
+        padding: 10,
+        borderRadius: 5,
+    },
+    completeText: {
+        fontSize: 15,
+        color: "#D6BD98",
+        fontFamily: "MontserratMedium"
+    },
+    tasksContainer: {
+        marginTop: 20,
     },
     headerContainer: {
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
     },
     headerTitle: {
-        fontSize: 15,
-        fontFamily: 'MontserratSemibold',
+        fontSize: 20,
+        fontFamily: "MontserratSemibold",
+        color: "#1A3636",
+        marginBottom: 10
     },
     headerSubtitle: {
-        fontSize: 15,
-        fontFamily: 'MontserratSemibold',
+        fontSize: 13,
+        fontFamily: "MontserratMedium",
+        color: "#1A3636",
     },
-    itemContainer: {
-        backgroundColor: "#93B1A6",
-        padding: 16,
-        borderBottomWidth: 1,
-        borderBottomColor: '#ccc',
-        marginBottom: 10,
-        borderRadius: 10,
+    taskTitle: {
+        fontSize: 15,
+        fontFamily: "MontserratSemibold",
+        color: "#FFF"
+    },
+    taskDescription: {
+        fontSize: 13,
+        color: "#FFF",
+        fontFamily: "MontserratSemibold",
+    },
+    taskFooter: {
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
         marginTop: 10
     },
-    buttonContainer: {
-        padding: 6,
+    taskFooterTextContainer: {
+        display: "flex",
+        flexDirection: "row",
     },
-    buttonText: {
-        fontSize: 20,
-        fontFamily: 'MontserratSemibold',
-        color: 'white',
-        backgroundColor: 'black',
-        padding: 6,
+    footerLabel: {
+        backgroundColor: "#9ab99f",
+        paddingHorizontal: 10,
+        borderRadius: 5,
+        padding: 5,
+        marginRight: 5,
     },
+    footerLabelText: {
+        fontSize: 12,
+        color: "#FFF",
+        fontFamily: "MontserratSemibold",
+    },
+    dashboardButtonContainer: {
+        display: "flex",
+        flexDirection: "row",
+        // justifyContent: "center",
+        // alignItems: "center",
+        marginTop: 20,
+    },
+    dashboardButton: {
+        backgroundColor: "#40534C",
+        borderRadius: 10,
+        paddingVertical: 10,
+        paddingHorizontal: 60,
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+    },
+    dashboardButtonText: {
+        fontSize: 15,
+        fontFamily: "MontserratSemibold",
+        color: "#fff",
+        marginRight: 10,
+    },
+    arrowButton: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    itemContainer: {
+        padding: 10,
+        backgroundColor: '#677D6A',
+        borderRadius: 10,
+        marginBottom: 10,
+    },
+    itemHeader: {
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginBottom: 10,
+    },
+    dateAndPriority: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    dateContainer: {
+        paddingRight: 8,
+    },
+    dateText: {
+        fontSize: 14,
+        fontFamily: "MontserratMedium",
+    },
+    priorityCircle: {
+        width: 15,
+        height: 15,
+        borderRadius: 10,
+    },
+    taskDetails: {
+        marginBottom: 10,
+    },
+    avatarAdmin: {
+        width: 25,
+        height: 25,
+        borderRadius: 20,
+    }
 });
 
 export default Main;

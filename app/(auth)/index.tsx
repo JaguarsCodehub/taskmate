@@ -75,7 +75,7 @@ export default function Auth() {
             <Stack.Screen options={{ headerShown: false, statusBarColor: "#677D6A" }} />
             <View style={{ display: "flex", flexDirection: "row", marginTop: 20 }}>
                 <Image source={require("@/assets/images/swift.png")} style={styles.logoImage} />
-                <Text style={{ fontSize: 20, fontWeight: "600", marginLeft: 10, fontFamily: "MontserratMedium", color: "black" }}>TaskMate</Text>
+                <Text style={{ fontSize: 20, fontWeight: "600", marginLeft: 10, fontFamily: "MontserratMedium", color: "black" }}>Rangshalakaa</Text>
             </View>
             <Text style={{ fontSize: 30, fontFamily: "MontserratSemibold", color: "white", marginTop: 20 }}>Let's get to know you better</Text>
             <View style={[styles.verticallySpaced, styles.mt20]}>

@@ -11,10 +11,10 @@ const Home = () => {
             <Stack.Screen options={{ statusBarColor: "#677D6A" }} />
             <View style={{ padding: 20, display: "flex", flexDirection: "row", marginTop: 20 }}>
                 <Image source={require("@/assets/images/swift.png")} style={styles.logoImage} />
-                <Text style={{ fontSize: 20, fontWeight: "600", marginLeft: 10, fontFamily: "MontserratMedium" }}>TaskMate</Text>
+                <Text style={{ fontSize: 20, fontWeight: "600", marginLeft: 10, fontFamily: "MontserratMedium" }}>Rangshalakaa</Text>
             </View>
             <View style={{ padding: 30 }}>
-                <Text style={{ fontSize: 40, color: "#ffe7c3", fontWeight: "600", lineHeight: 50, fontFamily: "MontserratMedium" }}>Get ready to <Text style={{ fontSize: 40, color: "#212121", fontWeight: "600", lineHeight: 50 }}>supercharge your goal</Text> setting and planner with <Text style={{ fontSize: 45, fontWeight: "600" }}>TaskMate</Text></Text>
+                <Text style={{ fontSize: 40, color: "#ffe7c3", fontWeight: "600", lineHeight: 50, fontFamily: "MontserratMedium" }}>Get ready to <Text style={{ fontSize: 40, color: "#212121", fontWeight: "600", lineHeight: 50 }}>supercharge your goal</Text> setting and planner with <Text style={{ fontSize: 45, fontWeight: "600" }}>Rangshalakaa</Text></Text>
             </View>
             <View style={{ marginTop: 40, padding: 20 }}>
                 <TouchableOpacity onPress={() => router.push('/(auth)')} style={{ backgroundColor: "#212121", borderRadius: 10, paddingHorizontal: 40, paddingVertical: 15 }}>
