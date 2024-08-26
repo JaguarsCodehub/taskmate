@@ -26,7 +26,7 @@ const CreateProjects = () => {
             if (error) throw error;
 
             Alert.alert('Project was created successfully');
-            router.push("/(admin)");
+            router.push("/(manager)");
         } catch (error: any) {
             Alert.alert('Error creating project', error.message);
             console.log("Error:", error.message)
@@ -41,7 +41,7 @@ const CreateProjects = () => {
             />
             <View style={{ padding: 10 }}>
                 <View>
-                    <Text style={{ fontSize: 30, fontFamily: "MontserratSemibold", color: "white" }}>Create Projects</Text>
+                    <Text style={{ fontSize: 30, fontFamily: "MontserratSemibold", color: "white" }}>Create Projects as Manager</Text>
                     <Text style={{ fontSize: 15, fontFamily: "MontserratRegular", color: "white" }}>Create new Projects</Text>
                 </View>
                 <View style={{ marginTop: 20 }}>

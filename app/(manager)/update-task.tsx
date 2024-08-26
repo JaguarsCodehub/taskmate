@@ -30,8 +30,8 @@ const UpdateTask = () => {
     }, []);
 
     const handleTaskClick = (taskId: string) => {
-        console.log(taskId)
-        router.push({ pathname: `(admin)/task-detail`, params: { taskId }, },);
+        // console.log(taskId)
+        router.push({ pathname: `(manager)/task-detail`, params: { taskId }, },);
     };
 
     return (
@@ -41,7 +41,7 @@ const UpdateTask = () => {
                 style={styles.background}
             />
             <View style={{ paddingHorizontal: 20, marginTop: 20 }}>
-                <Text style={{ fontSize: 20, fontFamily: "MontserratSemibold" }}>Update Tasks data</Text>
+                <Text style={{ fontSize: 20, fontFamily: "MontserratSemibold" }}>Update Tasks data as Manager</Text>
                 <Text style={{ fontSize: 15, fontFamily: "MontserratRegular" }}>You can update specific tasks to users</Text>
             </View>
             <View style={{ margin: 10 }}>

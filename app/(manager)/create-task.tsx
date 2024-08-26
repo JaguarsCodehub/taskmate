@@ -43,7 +43,7 @@ const CreateTaskScreen = () => {
             />
             <View style={{ padding: 10 }}>
                 <View>
-                    <Text style={{ fontSize: 30, fontFamily: "MontserratSemibold", color: "white" }}>Create Tasks</Text>
+                    <Text style={{ fontSize: 30, fontFamily: "MontserratSemibold", color: "white" }}>Create Tasks as Manager</Text>
                     <Text style={{ fontSize: 15, fontFamily: "MontserratRegular", color: "white" }}>Create Tasks and assign them to users</Text>
                 </View>
                 <View style={{ marginTop: 20 }}>

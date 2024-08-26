@@ -107,7 +107,7 @@ const TaskDetailScreen = () => {
             />
             <View style={{ padding: 20, height: '100%' }}>
                 <View>
-                    <Text style={{ fontSize: 20, fontFamily: "MontserratSemibold" }}>Update specific Task</Text>
+                    <Text style={{ fontSize: 20, fontFamily: "MontserratSemibold" }}>Update specific Task as Manager</Text>
                 </View>
                 <View style={{ marginTop: 24 }}>
                     <Text style={styles.text}>Change Title</Text>

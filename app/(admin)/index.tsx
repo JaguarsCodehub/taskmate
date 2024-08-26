@@ -2,7 +2,7 @@ import { Button, ScrollView, StyleSheet, Text, View, Dimensions, Alert, Touchabl
 import React, { useEffect, useState } from 'react'
 import { router } from 'expo-router'
 import { LinearGradient } from 'expo-linear-gradient';
-import CreditSummaryScreen from '@/components/CreditSummaryScreen';
+// import CreditSummaryScreen from '@/components/CreditSummaryScreen';
 import { format, startOfToday, endOfToday } from 'date-fns';
 import { supabase } from '@/utils/supabase';
 import { useAuth } from '@/providers/AuthProvider';

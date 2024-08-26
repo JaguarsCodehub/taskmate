@@ -38,7 +38,7 @@ const AssignTask = () => {
     const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
     const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
     const [selectedClientId, setSelectedClientId] = useState<string | null>(null);
-    const [adminId, setAdminId] = useState<string | null>(null);
+    const [managerId, setManagerId] = useState<string | null>(null);
     const [startDate, setStartDate] = useState<Date | undefined>(new Date());
     const [deadlineDate, setDeadlineDate] = useState<Date | undefined>(new Date());
     const [showStartDatePicker, setShowStartDatePicker] = useState<boolean>(false);
@@ -55,19 +55,20 @@ const AssignTask = () => {
                 if (tasksError || usersError || projectsError || clientsError)
                     throw new Error(tasksError?.message || usersError?.message || projectsError?.message || clientsError?.message);
 
-                const { data: adminData, error: adminError } = await supabase
+                const { data: managerData, error: managerError } = await supabase
                     .from('users')
                     .select('id')
-                    .eq('role', 'admin')
+                    .eq('role', 'manager')
                     .single();
+                // console.log("ManagerData:", managerData)
 
-                if (adminError) throw adminError;
+                if (managerError) throw managerError;
 
                 setTasks(tasksData || []);
                 setUsers(usersData || []);
                 setProjects(projectsData || []);
                 setClients(clientsData || []);
-                setAdminId(adminData?.id || null);
+                setManagerId(managerData.id || null);
             } catch (error: any) {
                 Alert.alert("Error Fetching Data", error.message);
             }
@@ -75,6 +76,8 @@ const AssignTask = () => {
 
         fetchData();
     }, []);
+
+    // console.log("Manager Id: ",managerId)
 
     const handleAssignTask = async () => {
         if (!selectedTaskId || !selectedUserId || !selectedProjectId || !selectedClientId) {
@@ -89,7 +92,7 @@ const AssignTask = () => {
                     {
                         task_id: selectedTaskId,
                         assigned_to: selectedUserId,
-                        assigned_by: adminId,
+                        assigned_by: managerId,
                         project_id: selectedProjectId,
                         client_id: selectedClientId,
                         start_date: startDate?.toISOString(),
@@ -131,8 +134,8 @@ const AssignTask = () => {
             />
             <View style={{ padding: 20 }}>
 
-                <Text style={{ fontSize: 25, fontFamily: "MontserratSemibold", color: "white" }}>Assign Tasks to users</Text>
-                <Text style={{ fontSize: 15, fontFamily: "MontserratRegular", color: "white" }}>You can assign specific tasks to users</Text>
+                <Text style={{ fontSize: 25, fontFamily: "MontserratSemibold", color: "white" }}>Assign Tasks to users as Manager</Text>
+                <Text style={{ fontSize: 15, fontFamily: "MontserratRegular", color: "white", marginTop: 10 }}>You can assign specific tasks to users</Text>
             </View>
             <View style={{ paddingHorizontal: 20 }}>
                 <PMMeetingComponent />

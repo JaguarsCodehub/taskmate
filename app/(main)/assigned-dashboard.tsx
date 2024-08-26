@@ -84,28 +84,39 @@ const AssignedDashboardScreen = () => {
     };
 
     const handleMarkAsComplete = async (taskId: string) => {
-        try {
-            const { error } = await supabase
-                .from('tasks')
-                .update({ status: 'completed' })
-                .eq('id', taskId);
+      try {
+        const { error } = await supabase
+          .from('tasks')
+          .update({
+            status: 'completed',
+            completed_at: new Date().toISOString(),
+          })
+          .eq('id', taskId);
 
-            if (error) throw error;
+        if (error) throw error;
 
-            setTasks((prevTasks) =>
-                prevTasks.map((task) =>
-                    task.tasks.id === taskId
-                        ? { ...task, tasks: { ...task.tasks, status: 'completed' } }
-                        : task
-                )
-            );
+        setTasks((prevTasks) =>
+          prevTasks.map((task) =>
+            task.tasks.id === taskId
+              ? {
+                  ...task,
+                  tasks: {
+                    ...task.tasks,
+                    status: 'completed',
+                    completed_at: new Date().toISOString(),
+                  },
+                }
+              : task
+          )
+        );
 
-            Alert.alert('Success', 'Task marked as completed');
-        } catch (error: any) {
-            Alert.alert('Error', error.message);
-            console.error(error);
-        }
+        Alert.alert('Success', 'Task marked as completed');
+      } catch (error: any) {
+        Alert.alert('Error', error.message);
+        console.error(error);
+      }
     };
+
 
     const renderTaskItem = ({ item }: { item: any }) => (
         <View style={styles.itemContainer}>

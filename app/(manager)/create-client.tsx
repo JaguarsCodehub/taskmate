@@ -41,7 +41,7 @@ const CreateClients = () => {
             />
             <View style={{ padding: 10 }}>
                 <View>
-                    <Text style={{ fontSize: 30, fontFamily: "MontserratSemibold", color: "white" }}>Create Client</Text>
+                    <Text style={{ fontSize: 30, fontFamily: "MontserratSemibold", color: "white" }}>Create Client as Manager</Text>
                     <Text style={{ fontSize: 15, fontFamily: "MontserratRegular", color: "white" }}>Create new client</Text>
                 </View>
                 <View style={{ marginTop: 20 }}>

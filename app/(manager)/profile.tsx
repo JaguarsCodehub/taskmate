@@ -108,6 +108,7 @@ const Profile = () => {
             />
             <View style={{ padding: 20, height: "100%" }}>
                 <Text style={{ fontSize: 25, fontFamily: "MontserratSemibold" }}>Update Profile</Text>
+                <Text style={{ fontSize: 20, fontFamily: "MontserratRegular" }}>Upadte your Manager Profile</Text>
                 <View style={{ marginTop: 25 }}>
                     <Text style={{ fontSize: 20, fontFamily: "MontserratSemibold" }}>Current Username</Text>
                     <TextInput placeholder={users?.username} value={newUsername}
