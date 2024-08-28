@@ -29,7 +29,7 @@ const CreateTaskScreen = () => {
             if (error) throw error;
 
             Alert.alert('Task created successfully');
-            router.push("/(admin)/assign-task");
+            // router.push("/(admin)/assign-task");
         } catch (error: any) {
             Alert.alert('Error creating task', error.message);
         }
@@ -38,27 +38,27 @@ const CreateTaskScreen = () => {
     return (
         <View style={{ padding: 10 }}>
             <LinearGradient
-                colors={['#0ba360', '#3cba92']}
+                colors={['#dfe9f3', '#ffffff']}
                 style={styles.background}
             />
             <View style={{ padding: 10 }}>
                 <View>
-                    <Text style={{ fontSize: 30, fontFamily: "MontserratSemibold", color: "white" }}>Create Tasks</Text>
-                    <Text style={{ fontSize: 15, fontFamily: "MontserratRegular", color: "white" }}>Create Tasks and assign them to users</Text>
+                    <Text style={{ fontSize: 30, fontFamily: "MontserratSemibold", color: "black" }}>Create Tasks</Text>
+                    <Text style={{ fontSize: 15, fontFamily: "MontserratRegular", color: "black" }}>Create Tasks and assign them to users</Text>
                 </View>
                 <View style={{ marginTop: 20 }}>
                     <View style={styles.holder}>
-                        <Text style={{ fontSize: 18, fontFamily: "MontserratSemibold", color: "white" }}>Title</Text>
-                        <TextInput placeholderTextColor={'#fff'} style={styles.textInput} value={title} onChangeText={setTitle} placeholder='Add Task Title' />
+                        <Text style={{ fontSize: 18, fontFamily: "MontserratSemibold", color: "black" }}>Title</Text>
+                        <TextInput placeholderTextColor={'#000'} style={styles.textInput} value={title} onChangeText={setTitle} placeholder='Add Task Title' />
                     </View>
 
                     <View style={styles.holder}>
-                        <Text style={{ fontSize: 18, fontFamily: "MontserratSemibold", color: "white" }}>Description</Text>
-                        <TextInput placeholderTextColor={'#fff'} style={styles.textInput} value={description} onChangeText={setDescription} placeholder='Give a Description to the task' />
+                        <Text style={{ fontSize: 18, fontFamily: "MontserratSemibold", color: "black" }}>Description</Text>
+                        <TextInput placeholderTextColor={'#000'} style={styles.textInput} value={description} onChangeText={setDescription} placeholder='Give a Description to the task' />
                     </View>
 
                     <View style={styles.holder}>
-                        <Text style={{ fontSize: 20, fontFamily: "MontserratSemibold", color: "white" }}>Change Priority</Text>
+                        <Text style={{ fontSize: 20, fontFamily: "MontserratSemibold", color: "black" }}>Change Priority</Text>
                         <Picker
                             selectedValue={priority}
                             style={styles.picker}
@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
     },
     textInput: {
         padding: 10,
-        borderColor: "white",
+        borderColor: "black",
         borderWidth: 1,
         borderRadius: 5,
         marginTop: 10

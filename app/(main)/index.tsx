@@ -191,6 +191,14 @@ const Main = () => {
                         </View>
                     </TouchableOpacity>
                 </View>
+                <View style={styles.dashboardButtonContainer}>
+                    <TouchableOpacity onPress={() => router.push('/(main)/assign-task')} style={styles.dashboardButton}>
+                        <Text style={styles.dashboardButtonText}>Assign Tasks for Admin</Text>
+                        <View style={styles.arrowButton}>
+                            <Feather name="arrow-up-right" size={24} color="#000" />
+                        </View>
+                    </TouchableOpacity>
+                </View>
             </View>
         </ScrollView>
     );
