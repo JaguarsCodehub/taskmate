@@ -5,9 +5,7 @@ import {
   Text,
   View,
   Dimensions,
-  Alert,
   TouchableOpacity,
-  Touchable,
   Image,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
@@ -79,7 +77,7 @@ const index = () => {
         </View>
 
         <View style={{ paddingHorizontal: 20, paddingBottom: 60 }}>
-          
+
           <TouchableOpacity
             onPress={() => router.push('/(manager)/create-project')}
           >
@@ -433,6 +431,64 @@ const index = () => {
                 }}
               >
                 Tasks are created for users to complete it
+              </Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => router.push('/(manager)/assign-many')}>
+            <View
+              style={{
+                backgroundColor: '#4f6051',
+                padding: 10,
+                borderRadius: 10,
+                marginTop: 10,
+              }}
+            >
+              <View
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: 20,
+                    fontFamily: 'MontserratSemibold',
+                    color: 'white',
+                  }}
+                >
+                  Assign to everyone
+                </Text>
+                <View
+                  style={{
+                    backgroundColor: '#F8EDED',
+                    padding: 2,
+                    width: 60,
+                    borderRadius: 10,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: 10,
+                      fontFamily: 'MontserratSemibold',
+                      color: 'black',
+                      textAlign: 'center',
+                    }}
+                  >
+                    Assign
+                  </Text>
+                </View>
+              </View>
+              <Text
+                style={{
+                  fontSize: 15,
+                  fontFamily: 'MontserratSemibold',
+                  color: 'white',
+                }}
+              >
+                Provision tasks to all users that exist here
               </Text>
             </View>
           </TouchableOpacity>

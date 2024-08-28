@@ -6,14 +6,6 @@ import { useAuth } from '@/providers/AuthProvider';
 import { format } from 'date-fns';
 import Feather from '@expo/vector-icons/Feather';
 
-type Task = {
-  id: any;
-  title: string;
-  priority: string;
-  status: string;
-  completed_at: string | null; // completed_at can be a string or null
-};
-
 const AssignedDashboardScreen = () => {
     const { user } = useAuth();
     const [tasks, setTasks] = useState<any[]>([]);
@@ -43,12 +35,11 @@ const AssignedDashboardScreen = () => {
     };
 
     const fetchAssignedTasks = async () => {
-      if (!selectedUser) return;
+        if (!selectedUser) return;
 
-      let query = supabase
-        .from('task_assignments')
-        .select(
-          `
+        let query = supabase
+            .from('task_assignments')
+            .select(`
                 id, 
                 start_date,
                 due_date,
@@ -56,114 +47,81 @@ const AssignedDashboardScreen = () => {
                     id,
                     title, 
                     priority,
-                    status,
-                    completed_at
+                    status
                 ),
-                assigned_by (full_name, role),
+                assigned_by (full_name),
                 projects!fk_project_id (
                     name
                 ),
                 clients (
                     name
                 )
-                `
-        )
-        .eq('assigned_to', selectedUser);
+            `)
+            .eq('assigned_to', selectedUser);
 
-      if (selectedStatus !== 'all') {
-        query = query.eq('tasks.status', selectedStatus);
-      }
-
-      if (selectedPriority && selectedPriority !== 'all') {
-        query = query.eq('tasks.priority', selectedPriority);
-      }
-
-      const today = new Date().toISOString();
-
-      if (selectedStatus === 'completed') {
-        if (selectedDateFilter === 'completed_on_time') {
-          query = query.lte('tasks.completed_at', 'due_date');
-        } else if (selectedDateFilter === 'completed_before_due') {
-          query = query.lt('tasks.completed_at', 'due_date');
-        } else if (selectedDateFilter === 'completed_after_due') {
-          query = query.gt('tasks.completed_at', 'due_date');
+        if (selectedStatus !== 'all') {
+            query = query.eq('tasks.status', selectedStatus);
         }
-      } else {
+
+        if (selectedPriority && selectedPriority !== 'all') {
+            query = query.eq('tasks.priority', selectedPriority);
+        }
+
+        const today = new Date();
         if (selectedDateFilter === 'next_7_days') {
-          const nextWeek = new Date();
-          nextWeek.setDate(new Date().getDate() + 7);
-          query = query
-            .gte('due_date', today)
-            .lte('due_date', nextWeek.toISOString());
+            const nextWeek = new Date();
+            nextWeek.setDate(today.getDate() + 7);
+            query = query.gte('due_date', today.toISOString()).lte('due_date', nextWeek.toISOString());
         } else if (selectedDateFilter === 'next_14_days') {
-          const nextFortnight = new Date();
-          nextFortnight.setDate(new Date().getDate() + 14);
-          query = query
-            .gte('due_date', today)
-            .lte('due_date', nextFortnight.toISOString());
+            const nextFortnight = new Date();
+            nextFortnight.setDate(today.getDate() + 14);
+            query = query.gte('due_date', today.toISOString()).lte('due_date', nextFortnight.toISOString());
         } else if (selectedDateFilter === 'overdue') {
-          query = query.lt('due_date', today);
+            query = query.lt('due_date', today.toISOString());
         }
-      }
 
-      const { data, error } = await query;
+        const { data, error } = await query;
 
-      if (error) {
-        console.error('Error fetching tasks:', error);
-      } else {
-        let tasksWithDetails = data.filter(
-          (task: any) =>
-            task.tasks &&
-            task.tasks.title &&
-            task.assigned_by.full_name &&
-            task.projects.name &&
-            task.clients.name &&
-            task.tasks.completed_at
-        );
+        if (error) {
+            console.error(error);
+        } else {
+            let tasksWithDetails = data.filter((task: any) =>
+                task.tasks && task.tasks.title && task.assigned_by.full_name && task.projects.name && task.clients.name
+            );
 
-        // Ensure that due_date and completed_at are valid before setting tasks
-        tasksWithDetails = tasksWithDetails.filter(
-          (task) => task.due_date && task.tasks.completed_at
-        );
-
-        setTasks(tasksWithDetails);
-        setFilteredTasks(tasksWithDetails);
-      }
+            setTasks(tasksWithDetails);
+            setFilteredTasks(tasksWithDetails);
+        }
     };
-
-
-
-
-
 
     const formatDate = (dateString: string) => {
         const date = new Date(dateString);
         return format(date, "d MMMM yyyy");
     };
 
-    // const handleMarkAsComplete = async (taskId: string) => {
-    //     try {
-    //         const { error } = await supabase
-    //             .from('tasks')
-    //             .update({ status: 'completed' })
-    //             .eq('id', taskId);
+    const handleMarkAsComplete = async (taskId: string) => {
+        try {
+            const { error } = await supabase
+                .from('tasks')
+                .update({ status: 'completed' })
+                .eq('id', taskId);
 
-    //         if (error) throw error;
+            if (error) throw error;
 
-    //         setTasks((prevTasks) =>
-    //             prevTasks.map((task) =>
-    //                 task.tasks.id === taskId
-    //                     ? { ...task, tasks: { ...task.tasks, status: 'completed' } }
-    //                     : task
-    //             )
-    //         );
+            setTasks((prevTasks) =>
+                prevTasks.map((task) =>
+                    task.tasks.id === taskId
+                        ? { ...task, tasks: { ...task.tasks, status: 'completed' } }
+                        : task
+                )
+            );
 
-    //         Alert.alert('Success', 'Task marked as completed');
-    //     } catch (error: any) {
-    //         Alert.alert('Error', error.message);
-    //         console.error(error);
-    //     }
-    // };
+            Alert.alert('Success', 'Task marked as completed');
+        } catch (error: any) {
+            Alert.alert('Error', error.message);
+            console.error(error);
+        }
+    };
 
     const renderTaskItem = ({ item }: { item: any }) => (
         <View style={styles.itemContainer}>
@@ -187,7 +145,7 @@ const AssignedDashboardScreen = () => {
     return (
         <ScrollView>
             <View style={styles.container}>
-                <Text style={styles.header}>Get User Reports as Manager</Text>
+                <Text style={styles.header}>Get User Reports</Text>
 
                 {/* User Picker */}
                 <Text style={{ fontFamily: "MontserratMedium", marginBottom: 10 }}>Select User</Text>
@@ -234,23 +192,19 @@ const AssignedDashboardScreen = () => {
                     </Picker>
                 </View>
 
-                {/* Completed Date Filter */}
-                {selectedStatus === 'completed' && (
-                    <>
-                        <Text style={{ fontFamily: "MontserratMedium", marginBottom: 10 }}>Filter Completed Tasks by Date</Text>
-                        <View style={styles.card}>
-                            <Picker
-                                selectedValue={selectedDateFilter}
-                                onValueChange={(itemValue) => setSelectedDateFilter(itemValue)}
-                            >
-                                <Picker.Item label="All" value="all" />
-                                <Picker.Item label="Completed On Time" value="completed_on_time" />
-                                <Picker.Item label="Completed Before Due Date" value="completed_before_due" />
-                                <Picker.Item label="Completed After Due Date" value="completed_after_due" />
-                            </Picker>
-                        </View>
-                    </>
-                )}
+                {/* Date Filter */}
+                <Text style={{ fontFamily: "MontserratMedium", marginBottom: 10 }}>Filter Tasks by Due Date</Text>
+                <View style={styles.card}>
+                    <Picker
+                        selectedValue={selectedDateFilter}
+                        onValueChange={(itemValue) => setSelectedDateFilter(itemValue)}
+                    >
+                        <Picker.Item label="All" value="all" />
+                        <Picker.Item label="Next 7 Days" value="next_7_days" />
+                        <Picker.Item label="Next 14 Days" value="next_14_days" />
+                        <Picker.Item label="Overdue" value="overdue" />
+                    </Picker>
+                </View>
 
                 {filteredTasks.length === 0 && selectedStatus !== null && (
                     <Text>No tasks with the status {selectedStatus}</Text>
