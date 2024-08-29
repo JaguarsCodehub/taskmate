@@ -1,6 +1,4 @@
 # Task Management Mobile Application
-
-
  - *NOTIFICATION MASTER : 30 MIN / 2 HRS / 1 DAY / 2 DAY / 7 DAYS/ 15 DAYS / 30 DAYS 
     WHICH WILL BE ASKED WHEN ASSIGN TASK
  - *REMINDERS : FOR RENEWAL OF AMC / INSURANCE ETC 
@@ -8,8 +6,6 @@
     NEED NOTIFICATION BEFORE 30/15/7/1 DAY BEFORE
  - REPORTS : USERWISE TASK COMPLETED 
     ON TIME / BEFORE / AFTER ✅ (Need revision)
-   New User Features:
- - USER CAN ALSO CREATE TASK FOR SOME REQUEST OR REQUIREMENT ✅ (partially done)
 ## New TODOS:
 New Admin Features: 
  - 3 LEVEL REQUIRE
@@ -19,17 +15,14 @@ New Admin Features:
  - ALL TASK CAN BE VIEW BY ADMIN AND MANAGER ✅
  - Manager is provided with all the features as same as Admin ✅
    - Create Tasks, Assign Task, Create Projects, Clients ✅
-   - Manager can also check Each User's Individial Report 
-
- - REPORTS : USERWISE TASK COMPLETED 
-    ON TIME / BEFORE / AFTER ✅ (Need revision)
+   - Manager can also check Each User's Individial Report ✅
 
  - TIME ALSO REQUIRE FOR TASK ASSIGN (TIME SLOT)
  - ONE TO MANY (ALL) TASK ASSIGN PROVISION ✅
  - PROJECT SELECTION IS OPTIONAL - NOT COMPULSORY FOR ASSIGN TASK ✅
 
 New User Features:
- - USER CAN ALSO CREATE TASK FOR SOME REQUEST OR REQUIREMENT
+ - USER CAN ALSO CREATE TASK FOR SOME REQUEST OR REQUIREMENT ✅
 
 ## TODOS:
 - Admin:

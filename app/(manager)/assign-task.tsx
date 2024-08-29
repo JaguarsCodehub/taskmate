@@ -73,7 +73,6 @@ const AssignTask = () => {
                 Alert.alert("Error Fetching Data", error.message);
             }
         };
-
         fetchData();
     }, []);
 
@@ -197,7 +196,6 @@ const AssignTask = () => {
                             onPress={() => setShowStartDatePicker(true)}
                             color={'#40534C'}
                         />
-
                         {showStartDatePicker && (
                             <DateTimePicker
                                 value={startDate || new Date()}
@@ -207,7 +205,6 @@ const AssignTask = () => {
                                 minimumDate={new Date()}
                             />
                         )}
-
                     </View>
                     <View>
                         <Text style={styles.text}>Deadline Date</Text>
@@ -216,7 +213,6 @@ const AssignTask = () => {
                             onPress={() => setShowDeadlineDatePicker(true)}
                             color={'#40534C'}
                         />
-
                         {showDeadlineDatePicker && (
                             <DateTimePicker
                                 value={deadlineDate || new Date()}

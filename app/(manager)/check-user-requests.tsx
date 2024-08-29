@@ -5,7 +5,7 @@ import { useAuth } from '@/providers/AuthProvider';
 
 interface UserRequests {
     id?: string;
-    user_id: string;
+    user_id: { full_name: string }; // Adjusting this to represent the correct type
     title: string;
     description: string;
     status: string;
@@ -17,12 +17,11 @@ const CheckUserRequests = () => {
     const userId = user?.id;
     const [userRequests, setUserRequests] = useState<UserRequests[]>([])
 
-
     useEffect(() => {
         const fetchUserRequests = async () => {
             const { data, error } = await supabase
                 .from('user_requests')
-                .select('title, description, status, user_id')
+                .select('title, description, status, user_id (full_name)')
                 .eq('assigned_to', userId)
 
             if (error) {
@@ -44,7 +43,7 @@ const CheckUserRequests = () => {
                         <Text style={{ fontFamily: "MontserratSemibold", color: "white" }}>Request Title: {request.title}</Text>
                         <Text style={{ fontFamily: "MontserratSemibold", color: "white" }}>Description: {request.description}</Text>
                         <Text style={{ fontFamily: "MontserratSemibold", color: "white" }}>Status: {request.status}</Text>
-                        <Text style={{ fontFamily: "MontserratSemibold", color: "white" }}>Request Assigned By: {request.user_id}</Text>
+                        <Text style={{ fontFamily: "MontserratSemibold", color: "white" }}>Request Assigned By: {request.user_id.full_name}</Text>
                     </View>
                 ))}
             </View>
