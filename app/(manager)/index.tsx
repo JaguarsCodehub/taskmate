@@ -670,6 +670,66 @@ const index = () => {
               </Text>
             </View>
           </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => router.push('/(manager)/check-user-requests')}
+          >
+            <View
+              style={{
+                backgroundColor: '#FFF',
+                padding: 10,
+                borderRadius: 10,
+                marginTop: 10,
+              }}
+            >
+              <View
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: 20,
+                    fontFamily: 'MontserratSemibold',
+                    color: 'black',
+                  }}
+                >
+                  Get User's Requests
+                </Text>
+                <View
+                  style={{
+                    backgroundColor: '#F8EDED',
+                    padding: 2,
+                    width: 60,
+                    borderRadius: 10,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: 10,
+                      fontFamily: 'MontserratSemibold',
+                      color: 'black',
+                      textAlign: 'center',
+                    }}
+                  >
+                    projects
+                  </Text>
+                </View>
+              </View>
+              <Text
+                style={{
+                  fontSize: 15,
+                  fontFamily: 'MontserratRegular',
+                  color: 'black',
+                }}
+              >
+                Get details on User's Report
+              </Text>
+            </View>
+          </TouchableOpacity>
         </View>
       </View>
     </ScrollView>

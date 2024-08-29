@@ -1,94 +1,124 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, Alert, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 import { supabase } from '@/utils/supabase';
-import { router } from 'expo-router';
-import { LinearGradient } from 'expo-linear-gradient';
 import { Picker } from '@react-native-picker/picker';
+import { useAuth } from '@/providers/AuthProvider';
 
 const { width, height } = Dimensions.get('window');
 
+interface ManagerType {
+    id: string;
+    full_name: string;
+}
 
-const CreateTaskScreen = () => {
+const CreateUserRequestScreen = () => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
-    const [priority, setPriority] = useState('low');
+    const [managers, setManagers] = useState<ManagerType[]>([]);
+    const [selectedManager, setSelectedManager] = useState('');
 
-    const handleCreateTask = async () => {
+    const { user } = useAuth()
+    const userId = user?.id
+
+    useEffect(() => {
+        const fetchManagers = async () => {
+            const { data, error } = await supabase
+                .from('users')
+                .select('id, full_name')
+                .in('role', ['manager', 'admin']);
+
+            if (error) {
+                Alert.alert('Error fetching managers', error.message);
+            } else {
+                setManagers(data);
+            }
+
+            console.log(managers)
+        };
+
+        fetchManagers();
+    }, []);
+
+    const handleCreateUserRequest = async () => {
+        if (!title || !selectedManager) {
+            Alert.alert('Please fill in all fields');
+            return;
+        }
+
         try {
             const { error } = await supabase
-                .from('tasks')
+                .from('user_requests')
                 .insert([
                     {
                         title,
                         description,
-                        priority,
-                        status: 'pending',
+                        user_id: userId,
+                        assigned_to: selectedManager,
                     },
                 ]);
 
             if (error) throw error;
 
-            Alert.alert('Task created successfully');
-            // router.push("/(admin)/assign-task");
+            console.log("Request was created")
+            Alert.alert('Request created successfully');
         } catch (error: any) {
-            Alert.alert('Error creating task', error.message);
+            Alert.alert('Error creating request', error.message);
         }
     };
 
     return (
         <View style={{ padding: 10 }}>
-            <LinearGradient
-                colors={['#dfe9f3', '#ffffff']}
-                style={styles.background}
-            />
-            <View style={{ padding: 10 }}>
-                <View>
-                    <Text style={{ fontSize: 30, fontFamily: "MontserratSemibold", color: "black" }}>Create Tasks</Text>
-                    <Text style={{ fontSize: 15, fontFamily: "MontserratRegular", color: "black" }}>Create Tasks and assign them to users</Text>
+            <View>
+                <Text style={{ fontSize: 30, fontFamily: "MontserratSemibold", color: "black" }}>Create User Request</Text>
+                <Text style={{ fontSize: 15, fontFamily: "MontserratRegular", color: "black" }}>Create a request and assign it to a manager or admin</Text>
+            </View>
+            <View style={{ marginTop: 20 }}>
+                <View style={styles.holder}>
+                    <Text style={{ fontSize: 18, fontFamily: "MontserratSemibold", color: "black" }}>Title</Text>
+                    <TextInput
+                        placeholderTextColor={'#000'}
+                        style={styles.textInput}
+                        value={title}
+                        onChangeText={setTitle}
+                        placeholder='Add Request Title'
+                    />
                 </View>
-                <View style={{ marginTop: 20 }}>
-                    <View style={styles.holder}>
-                        <Text style={{ fontSize: 18, fontFamily: "MontserratSemibold", color: "black" }}>Title</Text>
-                        <TextInput placeholderTextColor={'#000'} style={styles.textInput} value={title} onChangeText={setTitle} placeholder='Add Task Title' />
-                    </View>
 
-                    <View style={styles.holder}>
-                        <Text style={{ fontSize: 18, fontFamily: "MontserratSemibold", color: "black" }}>Description</Text>
-                        <TextInput placeholderTextColor={'#000'} style={styles.textInput} value={description} onChangeText={setDescription} placeholder='Give a Description to the task' />
-                    </View>
-
-                    <View style={styles.holder}>
-                        <Text style={{ fontSize: 20, fontFamily: "MontserratSemibold", color: "black" }}>Change Priority</Text>
-                        <Picker
-                            selectedValue={priority}
-                            style={styles.picker}
-                            onValueChange={(itemValue) => setPriority(itemValue)}
-                        >
-                            {/* <Picker.Item label='--Select Priority--' value='' /> */}
-                            <Picker.Item label='Low' value='low' />
-                            <Picker.Item label='Medium' value='medium' />
-                            <Picker.Item label='High' value='high' />
-                        </Picker>
-                    </View>
-                    <TouchableOpacity onPress={handleCreateTask} style={{ backgroundColor: "#0ba360", padding: 10, marginTop: 20, borderRadius: 5 }}>
-                        <Text style={{ fontSize: 18, fontFamily: "MontserratSemibold", color: "white", textAlign: "center" }}>Create Task</Text>
-                    </TouchableOpacity>
+                <View style={styles.holder}>
+                    <Text style={{ fontSize: 18, fontFamily: "MontserratSemibold", color: "black" }}>Description</Text>
+                    <TextInput
+                        placeholderTextColor={'#000'}
+                        style={styles.textInput}
+                        value={description}
+                        onChangeText={setDescription}
+                        placeholder='Give a Description to the request'
+                    />
                 </View>
+
+                <View style={styles.holder}>
+                    <Text style={{ fontSize: 20, fontFamily: "MontserratSemibold", color: "black" }}>Assign To</Text>
+                    <Picker
+                        selectedValue={selectedManager}
+                        style={styles.picker}
+                        onValueChange={(itemValue) => setSelectedManager(itemValue)}
+                    >
+                        {managers.map(manager => (
+                            <Picker.Item key={manager.id} label={manager.full_name} value={manager.id} />
+                        ))}
+                    </Picker>
+                </View>
+
+                <TouchableOpacity onPress={handleCreateUserRequest} style={styles.button}>
+                    <Text style={styles.buttonText}>Create Request</Text>
+                </TouchableOpacity>
             </View>
         </View>
     );
 };
 
-export default CreateTaskScreen;
+export default CreateUserRequestScreen;
 
 const styles = StyleSheet.create({
-    background: {
-        position: 'absolute',
-        left: 0,
-        right: 0,
-        top: 0,
-        height: height,
-    },
     holder: {
         marginTop: 10
     },
@@ -103,9 +133,18 @@ const styles = StyleSheet.create({
         height: 50,
         width: '100%',
         marginBottom: 20,
-        backgroundColor: '#E2DAD6',
-        borderRadius: 60,
-        fontWeight: '700',
         marginTop: 10
     },
-})
+    button: {
+        backgroundColor: "#0ba360",
+        padding: 10,
+        marginTop: 20,
+        borderRadius: 5,
+        textAlign: "center",
+    },
+    buttonText: {
+        fontSize: 18,
+        fontFamily: "MontserratSemibold",
+        color: "white",
+    }
+});
