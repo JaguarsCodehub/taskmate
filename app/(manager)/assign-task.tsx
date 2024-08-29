@@ -44,6 +44,15 @@ const AssignTask = () => {
     const [showStartDatePicker, setShowStartDatePicker] = useState<boolean>(false);
     const [showDeadlineDatePicker, setShowDeadlineDatePicker] = useState<boolean>(false);
 
+    const [startTime, setStartTime] = useState<Date | undefined>(new Date());
+    const [showStartTimePicker, setShowStartTimePicker] = useState<boolean>(false);
+
+    const convertToUTC = (date: Date) => {
+        // Convert the date to UTC time by subtracting the timezone offset
+        const utcDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+        return utcDate.toISOString().split('T')[1]; // Get time part "HH:MM:SS"
+    };
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -79,7 +88,11 @@ const AssignTask = () => {
     // console.log("Manager Id: ",managerId)
 
     const handleAssignTask = async () => {
-        if (!selectedTaskId || !selectedUserId || !selectedProjectId || !selectedClientId) {
+
+        const utcStartTime = startTime ? convertToUTC(startTime) : undefined;
+
+
+        if (!selectedTaskId || !selectedUserId || !selectedProjectId || !selectedClientId || !startTime) {
             Alert.alert('Error', 'Please select a task, user, project, and client.');
             return;
         }
@@ -94,8 +107,9 @@ const AssignTask = () => {
                         assigned_by: managerId,
                         project_id: selectedProjectId,
                         client_id: selectedClientId,
-                        start_date: startDate?.toISOString(),
-                        due_date: deadlineDate?.toISOString(),
+                        start_date: startDate?.toISOString().split('T')[0],
+                        due_date: deadlineDate?.toISOString().split('T')[0],
+                        start_time: utcStartTime,
                     },
                 ]);
 
@@ -110,6 +124,12 @@ const AssignTask = () => {
         } catch (error: any) {
             Alert.alert('Error assigning task', error.message);
         }
+    };
+
+    const onStartTimeChange = (event: any, selectedTime: Date | undefined) => {
+        const currentTime = selectedTime || startTime;
+        setShowStartTimePicker(Platform.OS === 'ios');
+        setStartTime(currentTime);
     };
 
     const onStartDateChange = (event: any, selectedDate: Date | undefined) => {
@@ -223,6 +243,22 @@ const AssignTask = () => {
                             />
                         )}
                     </View>
+                </View>
+
+                <View>
+                    <Text style={styles.text}>Start Time</Text>
+                    <Button
+                        title={startTime ? startTime.toLocaleTimeString() : 'Select Start Time'}
+                        onPress={() => setShowStartTimePicker(true)}
+                        color={'#40534C'}
+                    />
+                    {showStartTimePicker && (
+                        <DateTimePicker
+                            value={startTime || new Date()}
+                            mode="time"  // Mode set to 'time'
+                            display="default"
+                            onChange={onStartTimeChange} />
+                    )}
                 </View>
 
                 <View style={{ marginTop: 20, paddingBottom: 60 }}>

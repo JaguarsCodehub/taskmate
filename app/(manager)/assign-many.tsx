@@ -89,8 +89,8 @@ const AssignMany = () => {
                 assigned_by: managerId,
                 project_id: selectedProjectId || null, // Project is optional
                 client_id: selectedClientId,
-                start_date: startDate?.toISOString(),
-                due_date: deadlineDate?.toISOString(),
+                start_date: startDate?.toISOString().split('T')[0],
+                due_date: deadlineDate?.toISOString().split('T')[0],
             }));
 
             const { error } = await supabase.from('task_assignments').insert(assignments);

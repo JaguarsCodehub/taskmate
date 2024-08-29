@@ -17,7 +17,7 @@ New Admin Features:
    - Create Tasks, Assign Task, Create Projects, Clients ✅
    - Manager can also check Each User's Individial Report ✅
 
- - TIME ALSO REQUIRE FOR TASK ASSIGN (TIME SLOT)
+ - TIME ALSO REQUIRE FOR TASK ASSIGN (TIME SLOT) ✅
  - ONE TO MANY (ALL) TASK ASSIGN PROVISION ✅
  - PROJECT SELECTION IS OPTIONAL - NOT COMPULSORY FOR ASSIGN TASK ✅
 

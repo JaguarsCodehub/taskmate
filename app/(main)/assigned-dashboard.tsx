@@ -27,6 +27,7 @@ const AssignedDashboardScreen = () => {
                 id, 
                 start_date,
                 due_date,
+                start_time,
                 tasks (
                     id,
                     title, 
@@ -84,37 +85,37 @@ const AssignedDashboardScreen = () => {
     };
 
     const handleMarkAsComplete = async (taskId: string) => {
-      try {
-        const { error } = await supabase
-          .from('tasks')
-          .update({
-            status: 'completed',
-            completed_at: new Date().toISOString(),
-          })
-          .eq('id', taskId);
-
-        if (error) throw error;
-
-        setTasks((prevTasks) =>
-          prevTasks.map((task) =>
-            task.tasks.id === taskId
-              ? {
-                  ...task,
-                  tasks: {
-                    ...task.tasks,
+        try {
+            const { error } = await supabase
+                .from('tasks')
+                .update({
                     status: 'completed',
                     completed_at: new Date().toISOString(),
-                  },
-                }
-              : task
-          )
-        );
+                })
+                .eq('id', taskId);
 
-        Alert.alert('Success', 'Task marked as completed');
-      } catch (error: any) {
-        Alert.alert('Error', error.message);
-        console.error(error);
-      }
+            if (error) throw error;
+
+            setTasks((prevTasks) =>
+                prevTasks.map((task) =>
+                    task.tasks.id === taskId
+                        ? {
+                            ...task,
+                            tasks: {
+                                ...task.tasks,
+                                status: 'completed',
+                                completed_at: new Date().toISOString(),
+                            },
+                        }
+                        : task
+                )
+            );
+
+            Alert.alert('Success', 'Task marked as completed');
+        } catch (error: any) {
+            Alert.alert('Error', error.message);
+            console.error(error);
+        }
     };
 
 
@@ -125,6 +126,7 @@ const AssignedDashboardScreen = () => {
             <Text style={{ fontSize: 15, fontFamily: "MontserratMedium", color: "#FFF" }}>Project: {item.projects.name}</Text>
             <Text style={{ fontSize: 15, fontFamily: "MontserratMedium", color: "#FFF" }}>Client: {item.clients.name}</Text>
             <Text style={{ fontSize: 15, fontFamily: "MontserratMedium", color: "#FFF" }}>Priority: {item.tasks.priority}</Text>
+            <Text style={{ fontSize: 15, fontFamily: "MontserratMedium", color: "#FFF" }}>Start Time: {item.start_time}</Text>
             <Text style={{ fontSize: 15, fontFamily: "MontserratMedium", color: "#FFF" }}>Start Date: {formatDate(item.start_date)}</Text>
             <Text style={{ fontSize: 15, fontFamily: "MontserratMedium", color: "#FFF" }}>Due Date: {formatDate(item.due_date)}</Text>
             <Text style={{ fontSize: 15, fontFamily: "MontserratMedium", color: "#FFF" }}>Status: {item.tasks.status || 'Pending'}</Text>
