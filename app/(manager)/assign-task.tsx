@@ -6,8 +6,6 @@ import { Picker } from '@react-native-picker/picker';
 import PMMeetingComponent from '@/components/PMMeetingComponent';
 import { LinearGradient } from 'expo-linear-gradient';
 
-const { width, height } = Dimensions.get('window');
-
 interface Task {
     id: string;
     title: string;
