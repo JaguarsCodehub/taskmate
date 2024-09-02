@@ -5,6 +5,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
 import PMMeetingComponent from '@/components/PMMeetingComponent';
 import { LinearGradient } from 'expo-linear-gradient';
+import { sendPushNotification } from '@/utils/sendPushNotification';
 
 const { width, height } = Dimensions.get('window');
 
@@ -94,7 +95,7 @@ const AssignTask = () => {
         const utcStartTime = startTime ? convertToUTC(startTime) : undefined;
 
         try {
-            const { error } = await supabase
+            const { data, error } = await supabase
                 .from('task_assignments')
                 .insert([
                     {
@@ -115,6 +116,21 @@ const AssignTask = () => {
                 .from('tasks')
                 .update({ status: 'in_progress' })
                 .eq('id', selectedTaskId);
+
+            // Fetch the user's push token
+            const { data: userData, error: userError } = await supabase
+                .from('users')
+                .select('push_token')
+                .eq('id', selectedUserId)
+                .single();
+
+            if (userError) throw userError;
+
+            console.log("User's Push Token:", userData?.push_token);
+            if (userData?.push_token) {
+                // Send push notification
+                sendPushNotification(userData.push_token, "New Task Assigned", "You have been assigned a new task.");
+            }
 
             Alert.alert('Task assigned successfully');
         } catch (error: any) {

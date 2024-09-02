@@ -3,6 +3,7 @@ import { View, Text, TextInput, Button, Alert, StyleSheet, Dimensions, Touchable
 import { supabase } from '@/utils/supabase';
 import { Picker } from '@react-native-picker/picker';
 import { useAuth } from '@/providers/AuthProvider';
+import sendPushNotification from '@/utils/sendPushNotification';
 
 const { width, height } = Dimensions.get('window');
 
@@ -45,8 +46,10 @@ const CreateUserRequestScreen = () => {
             return;
         }
 
+        // Send Notification to the Admin that he has been assigned a task
+
         try {
-            const { error } = await supabase
+            const { data, error } = await supabase
                 .from('user_requests')
                 .insert([
                     {
@@ -56,6 +59,8 @@ const CreateUserRequestScreen = () => {
                         assigned_to: selectedManager,
                     },
                 ]);
+
+            // sendPushNotification(data)
 
             if (error) throw error;
 

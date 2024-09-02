@@ -133,12 +133,12 @@ const AssignedDashboardScreen = () => {
             <Text style={{ fontSize: 15, fontFamily: "MontserratMedium", color: "#FFF" }}>Start Date: {formatDate(item.start_date)}</Text>
             <Text style={{ fontSize: 15, fontFamily: "MontserratMedium", color: "#FFF" }}>Due Date: {formatDate(item.due_date)}</Text>
             <Text style={{ fontSize: 15, fontFamily: "MontserratMedium", color: "#FFF" }}>Status: {item.tasks.status || 'Pending'}</Text>
-            <TouchableOpacity
+            {/* <TouchableOpacity
                 onPress={() => handleMarkAsComplete(item.tasks.id)}
                 style={styles.completeButton}
             >
                 <Text style={{ fontSize: 15, fontFamily: "MontserratMedium", color: "white", alignItems: 'center', justifyContent: "center" }}>Mark as Complete ✔</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
         </View>
     );
 

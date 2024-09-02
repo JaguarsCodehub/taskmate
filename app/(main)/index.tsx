@@ -396,6 +396,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#677D6A',
         borderRadius: 10,
         marginBottom: 10,
+        margin: 2
     },
     itemHeader: {
         display: "flex",
