@@ -1,4 +1,5 @@
 import { useAuth } from '@/providers/AuthProvider';
+import NotificationProvider from '@/providers/NotificationProvider';
 import { supabase } from '@/utils/supabase';
 import { router, Stack } from 'expo-router';
 import { useEffect } from 'react';
@@ -36,9 +37,11 @@ export default function RootLayout() {
 
 
     return (
-        <Stack
-            screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="index" options={{ headerShown: false }} />
-        </Stack>
+        <NotificationProvider>
+            <Stack
+                screenOptions={{ headerShown: false }}>
+                <Stack.Screen name="index" options={{ headerShown: false }} />
+            </Stack>
+        </NotificationProvider>
     );
 }
