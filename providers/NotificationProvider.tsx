@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from 'react';
 import { Text, View, Button, Platform, Alert } from 'react-native';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
+import * as BackgroundFetch from 'expo-background-fetch';
+import * as TaskManager from 'expo-task-manager';
 import Constants from 'expo-constants';
 import { supabase } from '@/utils/supabase';
 import { useAuth } from './AuthProvider';
@@ -19,41 +21,35 @@ function handleRegistrationError(errorMessage: string) {
     throw new Error(errorMessage);
 }
 
-export default function NotificationProvider({ children }: any) {
+const TASK_NAME = 'check-task-notifications';
 
-    const { user } = useAuth()
+export default function NotificationProvider({ children }: any) {
+    const { user } = useAuth();
     const [expoPushToken, setExpoPushToken] = useState('');
-    const [notification, setNotification] = useState<Notifications.Notification | undefined>(
-        undefined
-    );
     const notificationListener = useRef<Notifications.Subscription>();
     const responseListener = useRef<Notifications.Subscription>();
-
-
 
     useEffect(() => {
         registerForPushNotificationsAsync()
             .then(token => setExpoPushToken(token ?? ''))
             .catch((error: any) => setExpoPushToken(`${error}`));
 
-        notificationListener.current = Notifications.addNotificationReceivedListener((notification) => {
+        notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
             Alert.alert(
                 notification.request.content.title || 'Notification',
                 notification.request.content.body || 'Notification Body',
-            )
-        })
-        console.log("User ID:", user?.id)
-        saveUserPushToken()
+            );
+        });
 
+        saveUserPushToken();
+
+        registerBackgroundFetchAsync(); // Register background fetch
 
         return () => {
             notificationListener.current &&
                 Notifications.removeNotificationSubscription(notificationListener.current);
-        }
-
+        };
     }, [expoPushToken, user]);
-
-
 
     const saveUserPushToken = async () => {
         if (!user?.id || !expoPushToken) {
@@ -75,9 +71,93 @@ export default function NotificationProvider({ children }: any) {
         Alert.alert("Push Token was saved");
     };
 
-    return children
+    const registerBackgroundFetchAsync = async () => {
+        try {
+            await BackgroundFetch.registerTaskAsync(TASK_NAME, {
+                minimumInterval: 15 * 60, // Check every 15 minutes
+                stopOnTerminate: false,   // Don't stop background fetch when the app is terminated
+                startOnBoot: true,        // Restart background fetch when the device is rebooted
+            });
+            console.log('Background fetch registered successfully');
+        } catch (err) {
+            console.error('Failed to register background fetch:', err);
+        }
+    };
+
+    return children;
 }
 
+// Task manager function to check for notifications
+TaskManager.defineTask(TASK_NAME, async () => {
+    try {
+        const now = new Date().toISOString();
+
+        // Fetch tasks where the current time is greater than or equal to the notification_time
+        const { data: tasks, error: tasksError } = await supabase
+            .from('task_assignments')
+            .select('assigned_to, task_id, notification_time')
+            .lte('notification_time', now);
+
+        if (tasksError) {
+            console.error('Error fetching tasks:', tasksError);
+            return BackgroundFetch.BackgroundFetchResult.Failed;
+        }
+
+        if (tasks && tasks.length > 0) {
+            console.log('Tasks to notify:', tasks);
+
+            for (const task of tasks) {
+                // Fetch the push token for the user assigned to the task
+                const { data: user, error: userError } = await supabase
+                    .from('users')
+                    .select('push_token')
+                    .eq('id', task.assigned_to)
+                    .single();
+
+                if (userError) {
+                    console.error('Error fetching user push token:', userError);
+                    continue; // Skip to the next task if there's an error
+                }
+
+                if (user && user.push_token) {
+                    await sendPushNotification(user.push_token, task.task_id);
+                } else {
+                    console.warn(`No push token found for user ${task.assigned_to}`);
+                }
+            }
+        }
+
+        return tasks.length > 0
+            ? BackgroundFetch.BackgroundFetchResult.NewData
+            : BackgroundFetch.BackgroundFetchResult.NoData;
+    } catch (error) {
+        console.error('Error in background task:', error);
+        return BackgroundFetch.BackgroundFetchResult.Failed;
+    }
+});
+
+// Function to send push notifications
+async function sendPushNotification(expoPushToken: string, taskId: string) {
+    const message = {
+        to: expoPushToken,
+        sound: 'default',
+        title: 'Task Reminder',
+        body: `You have a task to complete! Task ID: ${taskId}`,
+        data: { taskId },
+    };
+
+    await fetch('https://exp.host/--/api/v2/push/send', {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+            'Accept-encoding': 'gzip, deflate',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(message),
+    });
+
+    console.log("Notifiactionw as sent", message)
+}
 
 async function registerForPushNotificationsAsync() {
     if (Platform.OS === 'android') {
@@ -105,7 +185,6 @@ async function registerForPushNotificationsAsync() {
         if (!projectId) {
             handleRegistrationError('Project ID not found');
         }
-        // console.log(projectId)
         try {
             const pushTokenString = (
                 await Notifications.getExpoPushTokenAsync({
@@ -121,26 +200,4 @@ async function registerForPushNotificationsAsync() {
     } else {
         handleRegistrationError('Must use physical device for push notifications');
     }
-}
-
-
-
-async function sendPushNotification(expoPushToken: string) {
-    const message = {
-        to: expoPushToken,
-        sound: 'default',
-        title: 'Original Title',
-        body: 'And here is the body!',
-        data: { someData: 'goes here' },
-    };
-
-    await fetch('https://exp.host/--/api/v2/push/send', {
-        method: 'POST',
-        headers: {
-            Accept: 'application/json',
-            'Accept-encoding': 'gzip, deflate',
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(message),
-    });
 }

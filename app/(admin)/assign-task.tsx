@@ -275,7 +275,7 @@ const AssignTask = () => {
                         <DateTimePicker
                             value={startTime || new Date()}
                             mode="time"  // Mode set to 'time'
-                            display="default"
+                            display="spinner"
                             onChange={onStartTimeChange} />
                     )}
                 </View>
