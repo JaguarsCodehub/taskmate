@@ -46,6 +46,7 @@ const AssignTask = () => {
     const [showDeadlineDatePicker, setShowDeadlineDatePicker] = useState<boolean>(false);
     const [startTime, setStartTime] = useState<Date | undefined>(new Date());
     const [showStartTimePicker, setShowStartTimePicker] = useState<boolean>(false);
+    const [notificationInterval, setNotificationInterval] = useState<string>('30 MIN');
 
     const convertToUTC = (date: Date) => {
         // Convert the date to UTC time by subtracting the timezone offset
@@ -95,6 +96,7 @@ const AssignTask = () => {
         const utcStartTime = startTime ? convertToUTC(startTime) : undefined;
 
         try {
+            // Insert data into `task_assignments` table
             const { data, error } = await supabase
                 .from('task_assignments')
                 .insert([
@@ -107,8 +109,10 @@ const AssignTask = () => {
                         start_date: startDate?.toISOString().split('T')[0],
                         due_date: deadlineDate?.toISOString().split('T')[0],
                         start_time: utcStartTime,
+                        notification_interval: notificationInterval,
                     },
                 ]);
+
 
             if (error) throw error;
 
@@ -274,6 +278,24 @@ const AssignTask = () => {
                             display="default"
                             onChange={onStartTimeChange} />
                     )}
+                </View>
+
+
+                <View>
+                    <Text style={styles.text}>Notification Interval</Text>
+                    <Picker
+                        style={styles.picker}
+                        selectedValue={notificationInterval}
+                        onValueChange={(itemValue) => setNotificationInterval(itemValue)}
+                    >
+                        <Picker.Item label="30 minutes before" value="30 MIN" />
+                        <Picker.Item label="2 hours before" value="2 HRS" />
+                        <Picker.Item label="1 day before" value="1 DAY" />
+                        <Picker.Item label="2 days before" value="2 DAYS" />
+                        <Picker.Item label="7 days before" value="7 DAYS" />
+                        <Picker.Item label="15 days before" value="15 DAYS" />
+                        <Picker.Item label="30 days before" value="30 DAYS" />
+                    </Picker>
                 </View>
 
                 <View style={{ marginTop: 20, paddingBottom: 60 }}>

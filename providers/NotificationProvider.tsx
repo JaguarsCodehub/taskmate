@@ -51,7 +51,7 @@ export default function NotificationProvider({ children }: any) {
                 Notifications.removeNotificationSubscription(notificationListener.current);
         }
 
-    }, []);
+    }, [expoPushToken, user]);
 
 
 
