@@ -34,7 +34,7 @@
       [
         "expo-notifications",
         {
-          "icon": "./assets/images/swift-light.png",
+          "icon": "./assets/images/swift.png",
           "color": "#ffffff",
           "defaultChannel": "default",
           "sounds": [

@@ -48,11 +48,11 @@ const AssignTask = () => {
     const [showStartTimePicker, setShowStartTimePicker] = useState<boolean>(false);
     const [notificationInterval, setNotificationInterval] = useState<string>('30 MIN');
 
-    const convertToUTC = (date: Date) => {
-        // Convert the date to UTC time by subtracting the timezone offset
-        const utcDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
-        return utcDate.toISOString().split('T')[1]; // Get time part "HH:MM:SS"
-    };
+    // const convertToUTC = (date: Date) => {
+    //     // Convert the date to UTC time by subtracting the timezone offset
+    //     const utcDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+    //     return utcDate.toISOString().split('T')[1]; // Get time part "HH:MM:SS"
+    // };
 
 
     useEffect(() => {
@@ -93,7 +93,7 @@ const AssignTask = () => {
             return;
         }
 
-        const utcStartTime = startTime ? convertToUTC(startTime) : undefined;
+        // const utcStartTime = startTime ? convertToUTC(startTime) : undefined;
 
         try {
             // Insert data into `task_assignments` table
@@ -108,7 +108,7 @@ const AssignTask = () => {
                         client_id: selectedClientId,
                         start_date: startDate?.toISOString().split('T')[0],
                         due_date: deadlineDate?.toISOString().split('T')[0],
-                        start_time: utcStartTime,
+                        start_time: startTime?.toISOString().split('T')[1],
                         notification_interval: notificationInterval,
                     },
                 ]);
@@ -275,8 +275,11 @@ const AssignTask = () => {
                         <DateTimePicker
                             value={startTime || new Date()}
                             mode="time"  // Mode set to 'time'
-                            display="spinner"
-                            onChange={onStartTimeChange} />
+                            display="clock"
+                            onChange={onStartTimeChange}
+                            is24Hour={false}
+                        />
+
                     )}
                 </View>
 

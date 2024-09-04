@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from 'react';
 import { Text, View, Button, Platform, Alert } from 'react-native';
 import * as Device from 'expo-device';
@@ -7,12 +8,13 @@ import * as TaskManager from 'expo-task-manager';
 import Constants from 'expo-constants';
 import { supabase } from '@/utils/supabase';
 import { useAuth } from './AuthProvider';
+import moment from 'moment-timezone'
 
 Notifications.setNotificationHandler({
     handleNotification: async () => ({
         shouldShowAlert: true,
-        shouldPlaySound: false,
-        shouldSetBadge: false,
+        shouldPlaySound: true,
+        shouldSetBadge: true,
     }),
 });
 
@@ -41,13 +43,30 @@ export default function NotificationProvider({ children }: any) {
             );
         });
 
+        responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+            console.log(response);
+        })
+
         saveUserPushToken();
 
         registerBackgroundFetchAsync(); // Register background fetch
 
+        // scheduleNotifications();
+
+        const now = new Date().toISOString();
+        const kolkataTime = moment(now).tz('Asia/Kolkata').format('YYYY-MM-DD HH:mm:ssZ');
+
+
+        console.log(kolkataTime);
+
         return () => {
-            notificationListener.current &&
+            if (notificationListener.current) {
                 Notifications.removeNotificationSubscription(notificationListener.current);
+            }
+
+            if (responseListener.current) {
+                Notifications.removeNotificationSubscription(responseListener.current);
+            }
         };
     }, [expoPushToken, user]);
 
@@ -79,10 +98,24 @@ export default function NotificationProvider({ children }: any) {
                 startOnBoot: true,        // Restart background fetch when the device is rebooted
             });
             console.log('Background fetch registered successfully');
+            Alert.alert('Background fetch registered successfully');
         } catch (err) {
             console.error('Failed to register background fetch:', err);
         }
     };
+
+    // const scheduleNotifications = async () => {
+    //     await Notifications.scheduleNotificationAsync({
+    //         content: {
+    //             title: "Time's up!",
+    //             body: 'Change sides!',
+    //         },
+    //         trigger: {
+    //             seconds: 60 * 60,
+    //         },
+    //     });
+    //     console.log("Notification sent")
+    // }
 
     return children;
 }
@@ -90,13 +123,19 @@ export default function NotificationProvider({ children }: any) {
 // Task manager function to check for notifications
 TaskManager.defineTask(TASK_NAME, async () => {
     try {
+
         const now = new Date().toISOString();
+        const kolkataTime = moment(now).tz('Asia/Kolkata').format('YYYY-MM-DD HH:mm:ssZ');
 
         // Fetch tasks where the current time is greater than or equal to the notification_time
         const { data: tasks, error: tasksError } = await supabase
             .from('task_assignments')
             .select('assigned_to, task_id, notification_time')
-            .lte('notification_time', now);
+            .lte('notification_time', kolkataTime);
+
+        if (tasks) {
+            console.log("Tasks Data on this time:", tasks)
+        }
 
         if (tasksError) {
             console.error('Error fetching tasks:', tasksError);
@@ -121,6 +160,7 @@ TaskManager.defineTask(TASK_NAME, async () => {
 
                 if (user && user.push_token) {
                     await sendPushNotification(user.push_token, task.task_id);
+                    console.log('Sent push notification for task:', task.task_id);
                 } else {
                     console.warn(`No push token found for user ${task.assigned_to}`);
                 }
@@ -156,7 +196,7 @@ async function sendPushNotification(expoPushToken: string, taskId: string) {
         body: JSON.stringify(message),
     });
 
-    console.log("Notifiactionw as sent", message)
+    console.log("Notifiaction was sent", message)
 }
 
 async function registerForPushNotificationsAsync() {
