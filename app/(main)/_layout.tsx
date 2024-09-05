@@ -1,4 +1,5 @@
 import { useAuth } from '@/providers/AuthProvider';
+import NotificationProvider1 from '@/providers/notification-provider';
 import NotificationProvider from '@/providers/NotificationProvider';
 import { supabase } from '@/utils/supabase';
 import { router, Stack } from 'expo-router';
@@ -37,11 +38,11 @@ export default function RootLayout() {
 
 
     return (
-        <NotificationProvider>
+        <NotificationProvider1>
             <Stack
                 screenOptions={{ headerShown: false }}>
                 <Stack.Screen name="index" options={{ headerShown: false }} />
             </Stack>
-        </NotificationProvider>
+        </NotificationProvider1>
     );
 }
