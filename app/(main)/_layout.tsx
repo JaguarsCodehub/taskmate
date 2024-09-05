@@ -8,9 +8,13 @@ import { Alert } from 'react-native';
 
 
 export default function RootLayout() {
-    const { user } = useAuth()
+    const { user, role } = useAuth()
 
     const userId = user?.id; // Get this from your user context/auth state
+
+    // if (role !== 'user') {
+    //     return null;  // or some loading screen until the role is fully verified
+    // }
 
     useEffect(() => {
         const fetchAdmin = async () => {
