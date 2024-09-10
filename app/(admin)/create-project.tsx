@@ -13,6 +13,7 @@ const CreateProjects = () => {
     const [description, setDescription] = useState('');
 
     const handleCreateProject = async () => {
+
         try {
             const { error } = await supabase
                 .from('projects')

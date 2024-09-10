@@ -1,3 +1,36 @@
+# New TODOS:
+- Reminder Cards just like a POST REQUSTS
+- Reports ON TIME / BEFORE / AFTER ✅
+- IOS APP (Apple Developer Account and Apple Account Credentials)
+- Name of the APP, Details etc
+- Notification Docker Function (Supabase Docker)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # Task Management Mobile Application
  - *NOTIFICATION MASTER : 30 MIN / 2 HRS / 1 DAY / 2 DAY / 7 DAYS/ 15 DAYS / 30 DAYS 
     WHICH WILL BE ASKED WHEN ASSIGN TASK

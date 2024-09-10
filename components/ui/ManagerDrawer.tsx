@@ -16,15 +16,15 @@ const drawerItems = [
         path: '/(manager)/profile',
         items: [],
     },
-    {
-        label: 'Tasks Report',
-        icon: 'report',
-        items: [
-            { label: 'Monthly Report', icon: 'insert-drive-file', path: '/complaint-register' },
-            { label: 'Yearly Report', icon: 'folder-shared', path: '/complaint-track' },
-            // { label: 'Finished Complaint', icon: 'check', path: '/finished-complaint' },
-        ],
-    },
+    // {
+    //     label: 'Tasks Report',
+    //     icon: 'report',
+    //     items: [
+    //         { label: 'Monthly Report', icon: 'insert-drive-file', path: '/complaint-register' },
+    //         { label: 'Yearly Report', icon: 'folder-shared', path: '/complaint-track' },
+    //         // { label: 'Finished Complaint', icon: 'check', path: '/finished-complaint' },
+    //     ],
+    // },
     {
         label: 'Logout',
         icon: 'exit-to-app',
@@ -123,7 +123,7 @@ const AdminDrawer = ({ isOpen, closeDrawer }: { isOpen: any, closeDrawer: any })
                                 {item.label}
                             </Text>
                         </TouchableOpacity>
-                        {activeItem === item.label &&
+                        {/* {activeItem === item.label &&
                             item.items.length > 0 &&
                             item.items.map((subItem, subIndex) => (
                                 <TouchableOpacity
@@ -149,7 +149,7 @@ const AdminDrawer = ({ isOpen, closeDrawer }: { isOpen: any, closeDrawer: any })
                                         {subItem.label}
                                     </Text>
                                 </TouchableOpacity>
-                            ))}
+                            ))} */}
                     </View>
                 ))}
             </View>

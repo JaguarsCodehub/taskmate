@@ -9,8 +9,10 @@ export default function AuthLayout() {
             return <Redirect href="/(admin)" />;
         } else if (role === 'manager') {
             return <Redirect href="/(manager)" />;
+        } else if (role === 'user') {
+            return <Redirect href="/(main)" />;
         }
-        return <Redirect href="/(main)" />;
+
     }
 
     return <Stack />;

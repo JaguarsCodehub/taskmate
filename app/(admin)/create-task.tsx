@@ -14,6 +14,9 @@ const CreateTaskScreen = () => {
     const [priority, setPriority] = useState('low');
 
     const handleCreateTask = async () => {
+        if (!title || !description) {
+            Alert.alert("Error", "Please update the inputs first");
+        }
         try {
             const { error } = await supabase
                 .from('tasks')

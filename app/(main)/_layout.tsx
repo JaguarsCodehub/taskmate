@@ -26,7 +26,8 @@ export default function RootLayout() {
                 .single();
 
             if (roleError) {
-                Alert.alert('Error fetching user role', roleError.message);
+                // Alert.alert('Error fetching user role', roleError.message);
+                console.log('Error fetching user role', roleError.message);
                 // setLoading(false);
                 return;
             }
