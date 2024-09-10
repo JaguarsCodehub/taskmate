@@ -1,9 +1,11 @@
 # New TODOS:
+- User Tasks Displayed for Admin ✅
 - Reminder Cards just like a POST REQUSTS
 - Reports ON TIME / BEFORE / AFTER ✅
 - IOS APP (Apple Developer Account and Apple Account Credentials)
 - Name of the APP, Details etc
 - Notification Docker Function (Supabase Docker)
+
 
 
 

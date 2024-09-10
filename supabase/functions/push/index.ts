@@ -8,7 +8,8 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts"
 console.log("Hello from Functions!")
 
 Deno.serve(async (req) => {
-  const expoPushToken = "ExponentPushToken[ycbL2XExltO1UtCWj2cBBz]"
+  const expoPushToken = "ExponentPushToken[8wcJl-INN9blzxP4JzbQwy]"
+  
 
   const res = await fetch("https://exp.host/--/api/v2/push/send", {
     method: "POST",
