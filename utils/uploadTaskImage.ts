@@ -1,6 +1,5 @@
-import { supabase } from './supabase';
+import { supabase } from "./supabase";
 
-// Simple UUID generator for React Native
 const generateUUID = () => {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
         const r = Math.random() * 16 | 0;
@@ -9,10 +8,10 @@ const generateUUID = () => {
     });
 };
 
-export const uploadImageAsync = async (uri: string): Promise<string | null> => {
+export const uploadTaskImage = async (uri: string): Promise<string | null> => {
     try {
         const fileName = generateUUID() + '.jpg';
-
+ 
         const formData = new FormData();
         formData.append('file', {
             uri,
@@ -20,26 +19,27 @@ export const uploadImageAsync = async (uri: string): Promise<string | null> => {
             type: 'image/jpeg',
         } as any);
 
-        const { data, error } = await supabase.storage
-            .from('profiles')
+
+        const {data, error} = await supabase.storage
+            .from('completed_tasks')
             .upload(fileName, formData, {
                 contentType: 'image/jpeg',
-            });
+            })
 
-        if (error) {
-            console.error('Error uploading image:', error.message);
+        if(error) {
+            console.error('Error Uploading Image:', error.message);
             return null;
         }
 
-        const { data: publicUrlData, } = supabase
+        const {data: publicUrlData,} = supabase
             .storage
-            .from('profiles')
+            .from('completed_tasks')
             .getPublicUrl(data.path);
 
-
-        return publicUrlData.publicUrl;
+            return publicUrlData.publicUrl;
+        
     } catch (error) {
-        console.error('Error uploading image:', error);
+        console.error('Error Uploading Image:', error);
         return null;
     }
-};
+}
