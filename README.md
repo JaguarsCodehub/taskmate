@@ -11,7 +11,6 @@
 4. Mark as Complete needs Task Photo Proof ✅
 
 
-
 # Task Management Mobile Application
  - *NOTIFICATION MASTER : 30 MIN / 2 HRS / 1 DAY / 2 DAY / 7 DAYS/ 15 DAYS / 30 DAYS 
     WHICH WILL BE ASKED WHEN ASSIGN TASK
@@ -21,9 +20,6 @@
  - REPORTS : USERWISE TASK COMPLETED 
     ON TIME / BEFORE / AFTER ✅ (Need revision)
  - ReAssign Task needs revision
-
-
-
 
 ## New TODOS:
 New Admin Features: 
