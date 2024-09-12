@@ -29,14 +29,14 @@ export default function RootLayout() {
   useEffect(() => {
     if (role) {
       switch (role) {
-        case 'user':
-          router.push('/(main)');
-          break;
         case 'admin':
           router.push('/(admin)');
           break;
         case 'manager':
           router.push('/(manager)');
+          break;
+        case 'user':
+          router.push('/(main)');
           break;
         default:
           console.error('Unknown role');

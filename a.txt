@@ -1,6 +1,8 @@
 # Task Management Mobile Application
-
-
+1. While creating client, ask project
+2. Update Tasks, Only title should be shown, With project and client
+3. Update Tasks, Filter (priority), color code for priority
+4. Mark as Complete needs Task Photo Proof
 
 ExponentPushToken[35lv9SPfB8lzTS6vTMRxO6]
 

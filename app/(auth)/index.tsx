@@ -24,7 +24,8 @@ export default function Auth() {
         });
 
         if (error) {
-            Alert.alert(error.message);
+            // Alert.alert(error.message);
+            console.log(error.message)
             setLoading(false);
             return;
         }
@@ -37,7 +38,8 @@ export default function Auth() {
             .single();
 
         if (roleError) {
-            Alert.alert('Error fetching user role', roleError.message);
+            // Alert.alert('Error fetching user role', roleError.message);
+            console.log('Error fetching user role', roleError.message);
             setLoading(false);
             return;
         }
@@ -48,7 +50,7 @@ export default function Auth() {
             router.push('/(admin)')
         } if (data.role === "manager") {
             router.push('/(manager)')
-        } else {
+        } else if (data.role === "user") {
             router.push('/(main)')
         }
 

@@ -78,7 +78,7 @@ const CreateManager = () => {
                     ))}
                 </Picker>
             </View>
-            <TouchableOpacity style={{ backgroundColor: "#736a5c", padding: 15, borderRadius: 5 }}>
+            <TouchableOpacity onPress={handleCreateManager} style={{ backgroundColor: "#736a5c", padding: 15, borderRadius: 5 }}>
                 <Text style={{ fontSize: 15, fontFamily: "MontserratSemibold", textAlign: "center", color: "white" }}>Create Manager</Text>
             </TouchableOpacity>
         </View>

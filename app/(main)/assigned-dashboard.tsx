@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, Alert, Modal, Button, Image } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { supabase } from '@/utils/supabase';
 import { useAuth } from '@/providers/AuthProvider';
 import { format } from 'date-fns';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Feather from '@expo/vector-icons/Feather';
+import { uploadTaskImage } from '@/utils/uploadTaskImage';
+import * as ImagePicker from 'expo-image-picker'; // Import ImagePicker for selecting images
 
 const AssignedDashboardScreen = () => {
     const { user } = useAuth();
@@ -16,9 +18,89 @@ const AssignedDashboardScreen = () => {
     const [selectedDateFilter, setSelectedDateFilter] = useState<string>('all');
     const userId = user?.id;
 
+
+    const [imageUri, setImageUri] = useState<string | null>(null);
+    const [modalVisible, setModalVisible] = useState<boolean>(false);
+    const [taskToComplete, setTaskToComplete] = useState<string | null>(null);
+
     useEffect(() => {
         fetchAssignedTasks();
     }, [selectedStatus, selectedPriority, selectedDateFilter]);
+
+    const pickImage = async () => {
+        const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+        if (!permissionResult.granted) {
+            Alert.alert("Permission required", "You need to grant permission to access the media library.");
+            return;
+        }
+
+        const result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [4, 4],
+            quality: 1,
+        });
+
+        if (result.canceled === true) {
+            console.log('User cancelled image picker');
+            return;
+        }
+
+        setImageUri(result.assets[0].uri);
+    };
+
+    const handleCompletePress = (taskId: string) => {
+        setTaskToComplete(taskId);
+        setModalVisible(true); // Show modal to upload image
+    };
+
+    const handleConfirmCompletion = () => {
+        if (taskToComplete && imageUri) {
+            handleMarkAsComplete(taskToComplete, imageUri); // Pass the image URI
+        }
+        setModalVisible(false); // Hide modal after completion
+    };
+
+
+    const handleMarkAsComplete = async (taskId: string, imageUri: string) => {
+        try {
+
+            const imageUrl = await uploadTaskImage(imageUri);
+
+            const { error } = await supabase
+                .from('tasks')
+                .update({
+                    status: 'completed',
+                    completed_at: new Date().toISOString(),
+                    image_url: imageUrl
+                })
+                .eq('id', taskId);
+
+            if (error) throw error;
+
+            setTasks((prevTasks) =>
+                prevTasks.map((task) =>
+                    task.tasks.id === taskId
+                        ? {
+                            ...task,
+                            tasks: {
+                                ...task.tasks,
+                                status: 'completed',
+                                completed_at: new Date().toISOString(),
+                                image_url: imageUrl,
+                            },
+                        }
+                        : task
+                )
+            );
+
+            Alert.alert('Success', 'Task marked as completed');
+        } catch (error: any) {
+            Alert.alert('Error', error.message);
+            console.error(error);
+        }
+    };
 
     const fetchAssignedTasks = async () => {
         let query = supabase
@@ -84,39 +166,9 @@ const AssignedDashboardScreen = () => {
         return format(date, "d MMMM yyyy");
     };
 
-    const handleMarkAsComplete = async (taskId: string) => {
-        try {
-            const { error } = await supabase
-                .from('tasks')
-                .update({
-                    status: 'completed',
-                    completed_at: new Date().toISOString(),
-                })
-                .eq('id', taskId);
 
-            if (error) throw error;
 
-            setTasks((prevTasks) =>
-                prevTasks.map((task) =>
-                    task.tasks.id === taskId
-                        ? {
-                            ...task,
-                            tasks: {
-                                ...task.tasks,
-                                status: 'completed',
-                                completed_at: new Date().toISOString(),
-                            },
-                        }
-                        : task
-                )
-            );
 
-            Alert.alert('Success', 'Task marked as completed');
-        } catch (error: any) {
-            Alert.alert('Error', error.message);
-            console.error(error);
-        }
-    };
 
 
     const renderTaskItem = ({ item }: { item: any }) => (
@@ -130,12 +182,13 @@ const AssignedDashboardScreen = () => {
             <Text style={{ fontSize: 15, fontFamily: "MontserratMedium", color: "#FFF" }}>Start Date: {formatDate(item.start_date)}</Text>
             <Text style={{ fontSize: 15, fontFamily: "MontserratMedium", color: "#FFF" }}>Due Date: {formatDate(item.due_date)}</Text>
             <Text style={{ fontSize: 15, fontFamily: "MontserratMedium", color: "#FFF" }}>Status: {item.tasks.status || 'Pending'}</Text>
-            <TouchableOpacity
-                onPress={() => handleMarkAsComplete(item.tasks.id)}
-                style={styles.completeButton}
-            >
-                <Text style={{ fontSize: 15, fontFamily: "MontserratMedium", color: "white", alignItems: 'center', justifyContent: "center" }}>Mark as Complete ✔</Text>
-            </TouchableOpacity>
+            {item.tasks.status !== 'completed' && (
+                <TouchableOpacity onPress={() => handleCompletePress(item.tasks.id)} style={styles.completeButton}>
+                    <Text style={{ fontSize: 15, fontFamily: 'MontserratMedium', color: 'white', alignItems: 'center', justifyContent: 'center' }}>
+                        Mark as Complete ✔
+                    </Text>
+                </TouchableOpacity>
+            )}
         </View>
     );
 
@@ -202,6 +255,21 @@ const AssignedDashboardScreen = () => {
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={renderTaskItem}
             />
+
+            {/* Modal for image upload */}
+            <Modal visible={modalVisible} transparent={true} animationType="slide">
+                <View style={styles.modalContainer}>
+                    <Text style={styles.modalHeader}>Upload proof image</Text>
+                    <View>
+                        <Button title="Pick an image from gallery" onPress={pickImage} color={'#232323'} />
+                        {imageUri && <Image source={{ uri: imageUri }} style={{ width: 200, height: 200, marginTop: 10 }} />}
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 40 }}>
+                            <Button title="Confirm Completion" onPress={handleConfirmCompletion} color={'#212121'} />
+                            <Button title="Cancel" onPress={() => setModalVisible(false)} color={'#A02334'} />
+                        </View>
+                    </View>
+                </View>
+            </Modal>
         </View>
     );
 };
@@ -256,5 +324,18 @@ const styles = StyleSheet.create({
         fontSize: 15,
         fontFamily: 'MontserratSemibold',
         color: "#FF8343",
+    },
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        padding: 40,
+        backgroundColor: '#86AB89',
+        opacity: 0.9
+    },
+    modalHeader: {
+        fontSize: 20,
+        fontFamily: 'MontserratBold',
+        marginBottom: 20,
+        color: '#FFF',
     },
 });

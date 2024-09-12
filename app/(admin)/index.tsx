@@ -67,7 +67,29 @@ const AdminDashboard = () => {
                             <Text style={{ fontSize: 15, fontFamily: "MontserratRegular", color: "white" }}>Assign a Manager</Text>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => router.push('/(admin)/create-project')}>
+                    <TouchableOpacity onPress={() => router.push('/(admin)/create-reminders')}>
+                        <View style={{ backgroundColor: "#609966", padding: 10, borderRadius: 10, marginTop: 10 }}>
+                            <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+                                <Text style={{ fontSize: 20, fontFamily: "MontserratSemibold", color: "white" }}>Create Reminders</Text>
+                                <View style={{ backgroundColor: "#F8EDED", padding: 2, width: 60, borderRadius: 10, alignItems: "center", justifyContent: "center" }}>
+                                    <Text style={{ fontSize: 10, fontFamily: "MontserratSemibold", color: "black", textAlign: "center" }}>reminders</Text>
+                                </View>
+                            </View>
+                            <Text style={{ fontSize: 15, fontFamily: "MontserratRegular", color: "white" }}>Reminders for Users</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => router.push('/(admin)/check-tasks')}>
+                        <View style={{ backgroundColor: "#609966", padding: 10, borderRadius: 10, marginTop: 10 }}>
+                            <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+                                <Text style={{ fontSize: 20, fontFamily: "MontserratSemibold", color: "white" }}>Check User Requests</Text>
+                                <View style={{ backgroundColor: "#F8EDED", padding: 2, width: 60, borderRadius: 10, alignItems: "center", justifyContent: "center" }}>
+                                    <Text style={{ fontSize: 10, fontFamily: "MontserratSemibold", color: "black", textAlign: "center" }}>requsts</Text>
+                                </View>
+                            </View>
+                            <Text style={{ fontSize: 15, fontFamily: "MontserratRegular", color: "white" }}>Requsts assigned to Admin</Text>
+                        </View>
+                    </TouchableOpacity>
+                    {/* <TouchableOpacity onPress={() => router.push('/(admin)/create-project')}>
                         <View style={{ backgroundColor: "#78b87f", padding: 10, borderRadius: 10, marginTop: 10 }}>
                             <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
                                 <Text style={{ fontSize: 20, fontFamily: "MontserratSemibold", color: "white" }}>Notification Master</Text>
@@ -77,8 +99,8 @@ const AdminDashboard = () => {
                             </View>
                             <Text style={{ fontSize: 15, fontFamily: "MontserratRegular", color: "white" }}>Create Notifications</Text>
                         </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => router.push('/(admin)/create-project')}>
+                    </TouchableOpacity> */}
+                    {/* <TouchableOpacity onPress={() => router.push('/(admin)/create-project')}>
                         <View style={{ backgroundColor: "#b2dbaf", padding: 10, borderRadius: 10, marginTop: 10 }}>
                             <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
                                 <Text style={{ fontSize: 20, fontFamily: "MontserratSemibold", color: "white" }}>Create Reminders</Text>
@@ -88,7 +110,7 @@ const AdminDashboard = () => {
                             </View>
                             <Text style={{ fontSize: 15, fontFamily: "MontserratRegular", color: "white" }}>Reminders for users</Text>
                         </View>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                     <TouchableOpacity onPress={() => router.push('/(admin)/create-project')}>
                         <View style={{ backgroundColor: "#040D12", padding: 10, borderRadius: 10, marginTop: 10 }}>
                             <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>

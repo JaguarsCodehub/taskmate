@@ -13,6 +13,9 @@ const CreateClients = () => {
     const [description, setDescription] = useState('');
 
     const handleCreateClient = async () => {
+        if (!name || !description) {
+            Alert.alert('Error creating client', 'Please fill in all fields');
+        }
         try {
             const { error } = await supabase
                 .from('clients')

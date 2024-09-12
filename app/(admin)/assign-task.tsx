@@ -293,11 +293,11 @@ const AssignTask = () => {
                     >
                         <Picker.Item label="30 minutes before" value="30 MIN" />
                         <Picker.Item label="2 hours before" value="2 HRS" />
-                        <Picker.Item label="1 day before" value="1 DAY" />
-                        <Picker.Item label="2 days before" value="2 DAYS" />
-                        <Picker.Item label="7 days before" value="7 DAYS" />
-                        <Picker.Item label="15 days before" value="15 DAYS" />
-                        <Picker.Item label="30 days before" value="30 DAYS" />
+                        <Picker.Item label="1 day before" value="24 HRS" />
+                        <Picker.Item label="2 days before" value="48 HRS" />
+                        <Picker.Item label="7 days before" value="168 HRS" />
+                        <Picker.Item label="15 days before" value="360 HRS" />
+                        <Picker.Item label="30 days before" value="720 HRS" />
                     </Picker>
                 </View>
 

@@ -68,7 +68,7 @@ export default function NotificationProvider1({ children }: any) {
     const saveUserPushToken = async () => {
         if (!user?.id || !expoPushToken) {
             Alert.alert(
-                'Permission not granted to get push token for push notification!'
+                'Permission not granted for Notification!'
             );
             return;
         }
@@ -80,11 +80,11 @@ export default function NotificationProvider1({ children }: any) {
 
         if (error) {
             console.log(error.message);
-            Alert.alert(error.message);
+            // Alert.alert(error.message);
             return;
         }
         console.log(user.id);
-        Alert.alert('Push Token was saved');
+        // Alert.alert('Push Token was saved');
     };
 
     const registerBackgroundFetchAsync = async () => {
@@ -95,7 +95,7 @@ export default function NotificationProvider1({ children }: any) {
                 startOnBoot: true,
             });
             console.log('Background fetch registered successfully');
-            Alert.alert('Background fetch registered successfully');
+            // Alert.alert('Background fetch registered successfully');
         } catch (err) {
             console.error('Failed to register background fetch:', err);
         }
@@ -306,7 +306,7 @@ async function registerForPushNotificationsAsync() {
                 })
             ).data;
             console.log(pushTokenString);
-            Alert.alert('Push Token', pushTokenString);
+            // Alert.alert('Push Token', pushTokenString);
             return pushTokenString;
         } catch (e: unknown) {
             handleRegistrationError(`Error getting a push token - ${e}`);
